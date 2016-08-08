@@ -94,22 +94,30 @@ from sklearn.grid_search import GridSearchCV
 import xgboost as xgb
 
 
-xgb_grid = xgb.XGBClassifier(n_estimators=100, subsample=.8)
+xgb_grid = xgb.XGBClassifier(n_estimators=1000, subsample=.8)
 
 params = {
     'learning_rate': [0.05, 0.1, 0.5],
-    'max_features': [0.5, 1],
+    'colsample_bytree': [0.5, 1],
     'max_depth': [3, 4, 5],
 }
-gs = GridSearchCV(xgb_grid, params, cv=5, scoring='accuracy', n_jobs=-1)
+'''
+params = {
+    'learning_rate': [0.05],
+    'colsample_bytree': [0.5],
+    'max_depth': [3, 4, 5],
+}
+'''
+gs = GridSearchCV(xgb_grid, params, cv=5, scoring='accuracy', n_jobs=1)
 gs.fit(train_data[0::,1::], train_data[0::,0])
 
 test_data
 predictions = gs.predict(test_data).astype(int)
+predictions
+output = predictions
 
 
-
-predictions_file = open("D:/git_repository/Kaggle-titanic---Jiahong/input/xgb_grid_search.csv", "wb")
+predictions_file = open("D:/git_repository/Kaggle-titanic---Jiahong/input/xgb_grid_search 1000 trees.csv", "wb")
 open_file_object = csv.writer(predictions_file)
 open_file_object.writerow(["PassengerId","Survived"])
 open_file_object.writerows(zip(ids, output))
