@@ -103,12 +103,13 @@ from sklearn.grid_search import GridSearchCV
 import xgboost as xgb
 
 
-xgb_grid = xgb.XGBClassifier(n_estimators=500, subsample=.8)
+xgb_grid = xgb.XGBClassifier(n_estimators=1000)
 
 params = {
+    'subsample': [0.8, 0.7, 0.9, 1],
     'learning_rate': [0.05, 0.1, 0.5],
-    'colsample_bytree': [0.5, 1],
-    'max_depth': [3, 4, 5],
+    'colsample_bytree': [0.5, 0.8,  1],
+    'max_depth': [3, 4, 5, 6],
 }
 '''
 params = {
