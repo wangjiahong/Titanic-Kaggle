@@ -38,7 +38,7 @@ if len(train_df.Age[ train_df.Age.isnull() ]) > 0:
 train_df['familysize'] = train_df['SibSp'] + train_df['Parch']
 # Remove the Name column, Cabin, Ticket, and Sex (since I copied and filled it to Gender)
 train_df = train_df.drop(['Name', 'Sex', 'Ticket', 'Cabin', 'PassengerId'], axis=1) 
-
+train_df['familysize']
 
 # TEST DATA
 test_df = pd.read_csv('D:/git_repository/Kaggle-titanic---Jiahong/input/test.csv', header=0)        # Load the test file into a dataframe
@@ -71,6 +71,7 @@ if len(test_df.Fare[ test_df.Fare.isnull() ]) > 0:
 
 # Collect the test data's PassengerIds before dropping it
 ids = test_df['PassengerId'].values
+test_df['familysize'] = test_df['SibSp'] + test_df['Parch']
 # Remove the Name column, Cabin, Ticket, and Sex (since I copied and filled it to Gender)
 test_df = test_df.drop(['Name', 'Sex', 'Ticket', 'Cabin', 'PassengerId'], axis=1) 
 
@@ -90,17 +91,19 @@ forest = forest.fit( train_data[0::,1::], train_data[0::,0] )
 print 'Predicting...'
 output = forest.predict(test_data).astype(int)
 '''
-gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_data[0::,1::], train_data[0::,0])
-predictions = gbm.predict(test_data).astype(int)
 
 
-'''
-'''
+
+#gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_data[0::,1::], train_data[0::,0])
+#predictions = gbm.predict(test_data).astype(int)
+
+
+
 from sklearn.grid_search import GridSearchCV
 import xgboost as xgb
 
 
-xgb_grid = xgb.XGBClassifier(n_estimators=1000, subsample=.8)
+xgb_grid = xgb.XGBClassifier(n_estimators=500, subsample=.8)
 
 params = {
     'learning_rate': [0.05, 0.1, 0.5],
@@ -116,6 +119,10 @@ params = {
 '''
 gs = GridSearchCV(xgb_grid, params, cv=5, scoring='accuracy', n_jobs=1)
 gs.fit(train_data[0::,1::], train_data[0::,0])
+print gs.best_params_
+print gs.best_score_
+
+
 
 test_data
 predictions = gs.predict(test_data).astype(int)
@@ -123,7 +130,7 @@ predictions
 output = predictions
 
 
-predictions_file = open("D:/git_repository/Kaggle-titanic---Jiahong/input/xgb_grid_search 1000 trees.csv", "wb")
+predictions_file = open("D:/git_repository/Kaggle-titanic---Jiahong/input/xgb_grid_search 500 trees added family size,print parameters.csv", "wb")
 open_file_object = csv.writer(predictions_file)
 open_file_object.writerow(["PassengerId","Survived"])
 open_file_object.writerows(zip(ids, output))
