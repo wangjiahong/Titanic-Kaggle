@@ -35,7 +35,7 @@ train_df.Embarked = train_df.Embarked.map( lambda x: Ports_dict[x]).astype(int) 
 median_age = train_df['Age'].dropna().median()
 if len(train_df.Age[ train_df.Age.isnull() ]) > 0:
     train_df.loc[ (train_df.Age.isnull()), 'Age'] = median_age
-
+train_df['familysize'] = train_df['SibSp'] + train_df['Parch']
 # Remove the Name column, Cabin, Ticket, and Sex (since I copied and filled it to Gender)
 train_df = train_df.drop(['Name', 'Sex', 'Ticket', 'Cabin', 'PassengerId'], axis=1) 
 
