@@ -103,13 +103,13 @@ from sklearn.grid_search import GridSearchCV
 import xgboost as xgb
 
 
-xgb_grid = xgb.XGBClassifier(n_estimators=1000)
+xgb_grid = xgb.XGBClassifier(n_estimators=500, subsample = 0.8)
 
 params = {
-    'subsample': [0.8, 0.7, 0.9, 1],
-    'learning_rate': [0.05, 0.1, 0.5],
-    'colsample_bytree': [0.5, 0.8,  1],
-    'max_depth': [3, 4, 5, 6],
+  #  'subsample': [0.8, 0.7, 0.9, 1],
+    'learning_rate': [0.01, 0.05, 0.08], #, 0.1, 0.5
+    'colsample_bytree': [0.5, 0.8,  1],  #'colsample_bytree': [0.5, 0.8,  1],
+    'max_depth': [3, 4, 5],
 }
 '''
 params = {
@@ -118,7 +118,7 @@ params = {
     'max_depth': [3, 4, 5],
 }
 '''
-gs = GridSearchCV(xgb_grid, params, cv=5, scoring='roc_auc', n_jobs=1)        #accuracy
+gs = GridSearchCV(xgb_grid, params, cv=5, scoring='accuracy', n_jobs=1)        #accuracy
 gs.fit(train_data[0::,1::], train_data[0::,0])
 print gs.best_params_
 print gs.best_score_
@@ -131,7 +131,7 @@ predictions
 output = predictions
 
 
-predictions_file = open("D:/git_repository/Kaggle-titanic---Jiahong/input/xgb_grid_search 500 trees added family size,print parameters.csv", "wb")
+predictions_file = open("D:/git_repository/Kaggle-titanic---Jiahong/input/xgb_grid_search 1000 trees again.csv", "wb")
 open_file_object = csv.writer(predictions_file)
 open_file_object.writerow(["PassengerId","Survived"])
 open_file_object.writerows(zip(ids, output))
