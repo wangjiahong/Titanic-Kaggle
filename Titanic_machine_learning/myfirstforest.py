@@ -108,17 +108,11 @@ xgb_grid = xgb.XGBClassifier(n_estimators=500, subsample = 0.8)
 params = {
   #  'subsample': [0.8, 0.7, 0.9, 1],
     'learning_rate': [0.01, 0.05, 0.08], #, 0.1, 0.5
-    'colsample_bytree': [0.5, 0.8,  1],  #'colsample_bytree': [0.5, 0.8,  1],
-    'max_depth': [3, 4, 5],
+    'colsample_bytree': [0.7, 0.8,  0.9],  #'colsample_bytree': [0.5, 0.8,  1],
+    'max_depth': [2, 3],  #  'max_depth': [3, 4, 5],
 }
-'''
-params = {
-    'learning_rate': [0.05],
-    'colsample_bytree': [0.5],
-    'max_depth': [3, 4, 5],
-}
-'''
-gs = GridSearchCV(xgb_grid, params, cv=5, scoring='accuracy', n_jobs=1)        #accuracy
+
+gs = GridSearchCV(xgb_grid, params, cv=5, scoring='accuracy', n_jobs= 1)        #accuracy
 gs.fit(train_data[0::,1::], train_data[0::,0])
 print gs.best_params_
 print gs.best_score_
