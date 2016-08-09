@@ -90,6 +90,12 @@ forest = forest.fit( train_data[0::,1::], train_data[0::,0] )
 print 'Predicting...'
 output = forest.predict(test_data).astype(int)
 '''
+gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_data[0::,1::], train_data[0::,0])
+predictions = gbm.predict(test_data).astype(int)
+
+
+'''
+'''
 from sklearn.grid_search import GridSearchCV
 import xgboost as xgb
 
