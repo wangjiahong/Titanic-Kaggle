@@ -117,7 +117,7 @@ params = {
     'max_depth': [3, 4, 5],
 }
 '''
-gs = GridSearchCV(xgb_grid, params, cv=5, scoring='accuracy', n_jobs=1)
+gs = GridSearchCV(xgb_grid, params, cv=5, scoring='roc_auc', n_jobs=1)        #accuracy
 gs.fit(train_data[0::,1::], train_data[0::,0])
 print gs.best_params_
 print gs.best_score_
