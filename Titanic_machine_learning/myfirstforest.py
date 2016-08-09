@@ -38,6 +38,9 @@ if len(train_df.Age[ train_df.Age.isnull() ]) > 0:
 train_df['familysize'] = train_df['SibSp'] + train_df['Parch']
 # Remove the Name column, Cabin, Ticket, and Sex (since I copied and filled it to Gender)
 train_df = train_df.drop(['Name', 'Sex', 'Ticket', 'Cabin', 'PassengerId'], axis=1) 
+train_df = train_df.drop(['SibSp', 'Parch'], axis=1) 
+
+
 train_df['familysize']
 
 # TEST DATA
@@ -75,7 +78,10 @@ test_df['familysize'] = test_df['SibSp'] + test_df['Parch']
 # Remove the Name column, Cabin, Ticket, and Sex (since I copied and filled it to Gender)
 test_df = test_df.drop(['Name', 'Sex', 'Ticket', 'Cabin', 'PassengerId'], axis=1) 
 
+# drop sibsp and Parch
+test_df = test_df.drop(['SibSp', 'Parch'], axis=1) 
 
+#test_df
 # The data is now ready to go. So lets fit to the train, then predict to the test!
 # Convert back to a numpy array
 train_data = train_df.values
@@ -103,7 +109,7 @@ from sklearn.grid_search import GridSearchCV
 import xgboost as xgb
 
 
-xgb_grid = xgb.XGBClassifier(n_estimators=500, subsample = 0.8)
+xgb_grid = xgb.XGBClassifier(n_estimators=1000, subsample = 0.8)
 
 params = {
   #  'subsample': [0.8, 0.7, 0.9, 1],
@@ -125,7 +131,7 @@ predictions
 output = predictions
 
 
-predictions_file = open("D:/git_repository/Kaggle-titanic---Jiahong/input/xgb_grid_search 1000 trees again.csv", "wb")
+predictions_file = open("D:/git_repository/Kaggle-titanic---Jiahong/input/drop subling numbers to decrease overfitting--xgb_grid_search 1000 trees again.csv", "wb")
 open_file_object = csv.writer(predictions_file)
 open_file_object.writerow(["PassengerId","Survived"])
 open_file_object.writerows(zip(ids, output))
