@@ -7,6 +7,15 @@ import pandas as pd
 import xgboost as xgb
 from sklearn.preprocessing import LabelEncoder
 import numpy as np
+import os
+import sys
+
+#os.chdir(sys.path[0])
+#os.chdir(os.path.dirname(sys.argv[0]))
+os.chdir("Z:/Kaggle-titanic---Jiahong/") # office HP
+#os.chdir("D:/git_repository/Kaggle-titanic---Jiahong/") ##Jiahong's Leanovo
+
+pwd
 
 # Load the data
 train_df = pd.read_csv('input/train.csv', header=0)
