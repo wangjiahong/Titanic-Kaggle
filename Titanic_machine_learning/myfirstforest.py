@@ -10,6 +10,7 @@ import numpy as np
 import csv as csv
 from sklearn.ensemble import RandomForestClassifier
 import os
+import xgboost as xgb
 os.chdir('D:/git_repository/Kaggle-titanic---Jiahong/')
 # Data cleanup
 # TRAIN DATA
@@ -92,20 +93,22 @@ test_data = test_df.values
 
 train_data
 test_data
-'''
+
+
+#1 Random forest
 print 'Training...'
-forest = RandomForestClassifier(n_estimators=100)
+forest = RandomForestClassifier(n_estimators=10000)
 forest = forest.fit( train_data[0::,1::], train_data[0::,0] )
 
 print 'Predicting...'
 output = forest.predict(test_data).astype(int)
-'''
+# Random forest get result of 0.74163
 
 
 
-#gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_data[0::,1::], train_data[0::,0])
+#gbm = xgb.XGBClassifier(max_depth=3, n_estimators=3000, learning_rate=0.05).fit(train_data[0::,1::], train_data[0::,0])
 #predictions = gbm.predict(test_data).astype(int)
-
+# 70% on leader board
 
 
 from sklearn.grid_search import GridSearchCV
@@ -134,7 +137,7 @@ predictions
 output = predictions
 
 
-predictions_file = open("input/make another try with trees.csv", "wb") 
+predictions_file = open("input/10000 random forest trees with rich features.csv", "wb") 
 open_file_object = csv.writer(predictions_file)
 open_file_object.writerow(["PassengerId","Survived"])
 open_file_object.writerows(zip(ids, output))

@@ -12,8 +12,8 @@ import sys
 
 #os.chdir(sys.path[0])
 #os.chdir(os.path.dirname(sys.argv[0]))
-os.chdir("Z:/Kaggle-titanic---Jiahong/") # office HP
-#os.chdir("D:/git_repository/Kaggle-titanic---Jiahong/") ##Jiahong's Leanovo
+#os.chdir("Z:/Kaggle-titanic---Jiahong/") # office HP
+os.chdir("D:/git_repository/Kaggle-titanic---Jiahong/") ##Jiahong's Leanovo
 
 pwd
 
@@ -58,13 +58,14 @@ train_y = train_df['Survived']
 # You can experiment with many other options here, using the same .fit() and .predict()
 # methods; see http://scikit-learn.org
 # This example uses the current build of XGBoost, from https://github.com/dmlc/xgboost
-gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_X, train_y)
+gbm = xgb.XGBClassifier(max_depth=3, n_estimators=30000, learning_rate=0.05).fit(train_X, train_y)
 predictions = gbm.predict(test_X)
+# get result of 0.69 on leaderboard
 
 # Kaggle needs the submission to have a certain format;
 # see https://www.kaggle.com/c/titanic-gettingStarted/download/gendermodel.csv
 # for an example of what it's supposed to look like.
 submission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'],
                             'Survived': predictions })
-submission.to_csv("submission.csv", index=False)
+submission.to_csv("input/submission 30000 tree.csv", index=False)
 
