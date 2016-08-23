@@ -11,6 +11,7 @@ import csv as csv
 from sklearn.ensemble import RandomForestClassifier
 import os
 import xgboost as xgb
+from sklearn import cross_validation
 os.chdir('D:/git_repository/Kaggle-titanic---Jiahong/')
 # Data cleanup
 # TRAIN DATA
@@ -102,8 +103,18 @@ forest = forest.fit( train_data[0::,1::], train_data[0::,0] )
 
 print 'Predicting...'
 output = forest.predict(test_data).astype(int)
+output = clf.predict(test_data).astype(int)
 # Random forest get result of 0.74163
 
+
+X_train_cv, X_test_cv, y_train_cv, y_test_cv = cross_validation.train_test_split(train_data[0::,1::], train_data[0::,0], test_size=0.2)
+
+clf = RandomForestClassifier(n_estimators=10000).fit(X_train_cv, y_train_cv)
+clf.score(X_test_cv, y_test_cv) 
+
+
+clf = xgb.XGBClassifier(max_depth=3, n_estimators=10000, learning_rate=0.05).fit(X_train_cv, y_train_cv)
+clf.score(X_test_cv, y_test_cv)   
 
 
 #gbm = xgb.XGBClassifier(max_depth=3, n_estimators=3000, learning_rate=0.05).fit(train_data[0::,1::], train_data[0::,0])
