@@ -9,11 +9,14 @@ import pandas as pd
 import numpy as np
 import csv as csv
 from sklearn.ensemble import RandomForestClassifier
-
+import os
+os.chdir('D:/git_repository/Kaggle-titanic---Jiahong/')
 # Data cleanup
 # TRAIN DATA
-train_df = pd.read_csv('D:/git_repository/Kaggle-titanic---Jiahong/input/train.csv', header=0)        # Load the train file into a dataframe
 
+
+train_df = pd.read_csv('input/train.csv', header=0)        # Load the train file into a dataframe
+train_df
 # I need to convert all strings to integer classifiers.
 # I need to fill in the missing values of the data and make it complete.
 
@@ -115,7 +118,7 @@ params = {
   #  'subsample': [0.8, 0.7, 0.9, 1],
     'learning_rate': [0.01, 0.05, 0.08], #, 0.1, 0.5
     'colsample_bytree': [0.7, 0.8,  0.9],  #'colsample_bytree': [0.5, 0.8,  1],
-    'max_depth': [2, 3],  #  'max_depth': [3, 4, 5],
+    'max_depth': [2, 3, 4],  #  'max_depth': [3, 4, 5],
 }
 
 gs = GridSearchCV(xgb_grid, params, cv=5, scoring='accuracy', n_jobs= 1)        #accuracy
@@ -131,7 +134,7 @@ predictions
 output = predictions
 
 
-predictions_file = open("D:/git_repository/Kaggle-titanic---Jiahong/input/drop subling numbers to decrease overfitting--xgb_grid_search 1000 trees again.csv", "wb")
+predictions_file = open("input/make another try with trees.csv", "wb") 
 open_file_object = csv.writer(predictions_file)
 open_file_object.writerow(["PassengerId","Survived"])
 open_file_object.writerows(zip(ids, output))
