@@ -49,7 +49,7 @@ train_df = train_df.drop(['SibSp', 'Parch'], axis=1)
 train_df['familysize']
 
 # TEST DATA
-test_df = pd.read_csv('D:/git_repository/Kaggle-titanic---Jiahong/input/test.csv', header=0)        # Load the test file into a dataframe
+test_df = pd.read_csv('input/test.csv', header=0)        # Load the test file into a dataframe
 
 # I need to do the same with the test data now, so that the columns are the same as the training data
 # I need to convert all strings to integer classifiers:
