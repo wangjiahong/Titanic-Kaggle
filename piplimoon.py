@@ -10,9 +10,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from time import time
+import os
+os.chdir("D:/git_repository/Kaggle-titanic---Jiahong/")
 
-titanic_train = pd.read_csv("../input/train.csv", dtype={"Age": np.float64}, )
-titanic_test = pd.read_csv("../input/test.csv", dtype={"Age": np.float64}, )
+
+titanic_train = pd.read_csv("input/train.csv", dtype={"Age": np.float64}, )
+titanic_test = pd.read_csv("input/test.csv", dtype={"Age": np.float64}, )
 
 train_set = titanic_train.drop("Survived", axis = 1)
 df_combo = pd.concat((train_set, titanic_test), axis = 0, ignore_index = True)
@@ -203,5 +206,5 @@ np.max(cv_score)))
  
 final_pred = pipeline.predict(df_test)
 submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
-submission.to_csv("RandomForest_v1.csv", index=False) 
+submission.to_csv("input/piplimoon_RandomForest_jiahong.csv", index=False) 
  
