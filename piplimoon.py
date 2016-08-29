@@ -181,28 +181,33 @@ from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
 
 
 from sklearn.pipeline import make_pipeline
-
-select = SelectKBest(k = 20)
-clf = RandomForestClassifier(random_state = 12, warm_start = True, 
+accuracy_ = []
+for i in range(0, 100):
+    
+    select = SelectKBest(k = 20)
+    clf = RandomForestClassifier(random_state = i, warm_start = True, 
                                   n_estimators = 26,
                                   max_depth = 6, 
                                   max_features = 'sqrt')
-pipeline = make_pipeline(select, clf)               
+    pipeline = make_pipeline(select, clf)               
  
 #select.fit(df_train, df_target)
 
-pipeline.fit(df_train, df_target)
-predictions = pipeline.predict(df_train)
-predict_proba = pipeline.predict_proba(df_train)[:,1]
+    pipeline.fit(df_train, df_target)
+    predictions = pipeline.predict(df_train)
+    predict_proba = pipeline.predict_proba(df_train)[:,1]
 
  
-cv_score = cross_validation.cross_val_score(pipeline, df_train, df_target, cv= 10)
-print("Accuracy : %.4g" % metrics.accuracy_score(df_target.values, predictions))
-print("AUC Score (Train): %f" % metrics.roc_auc_score(df_target, predict_proba))
-print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" % (np.mean(cv_score), np.std(cv_score), 
-np.min(cv_score),
-np.max(cv_score)))
-
+    cv_score = cross_validation.cross_val_score(pipeline, df_train, df_target, cv= 10)
+    print 'Random state:', i
+    print("Accuracy : %.4g" % metrics.accuracy_score(df_target.values, predictions))
+    print("AUC Score (Train): %f" % metrics.roc_auc_score(df_target, predict_proba))
+    print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" % (np.mean(cv_score), np.std(cv_score), 
+                                                                          np.min(cv_score),np.max(cv_score)))
+    print '\n'                                                                         
+    accuracy_.append(metrics.accuracy_score(df_target.values, predictions))
+accuracy_.index(max(accuracy_))
+accuracy_[51]
  
 final_pred = pipeline.predict(df_test)
 submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
