@@ -116,10 +116,12 @@ clf.score(X_test_cv, y_test_cv)
 clf = xgb.XGBClassifier(max_depth=3, n_estimators=10000, learning_rate=0.05).fit(X_train_cv, y_train_cv)
 clf.score(X_test_cv, y_test_cv)   
 
+## This is how I get 78% of the leaderboard
+gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_data[0::,1::], train_data[0::,0])
+predictions = gbm.predict(test_data).astype(int)
+# 76% on leader board
 
-#gbm = xgb.XGBClassifier(max_depth=3, n_estimators=3000, learning_rate=0.05).fit(train_data[0::,1::], train_data[0::,0])
-#predictions = gbm.predict(test_data).astype(int)
-# 70% on leader board
+
 
 
 from sklearn.grid_search import GridSearchCV
@@ -148,7 +150,7 @@ predictions
 output = predictions
 
 
-predictions_file = open("input/10000 random forest trees with rich features.csv", "wb") 
+predictions_file = open("input/29 august.csv", "wb") 
 open_file_object = csv.writer(predictions_file)
 open_file_object.writerow(["PassengerId","Survived"])
 open_file_object.writerows(zip(ids, output))
