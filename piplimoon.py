@@ -183,7 +183,7 @@ from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
 from sklearn.pipeline import make_pipeline
 
 select = SelectKBest(k = 20)
-clf = RandomForestClassifier(random_state = 12, warm_start = True, 
+clf = RandomForestClassifier(random_state = 51, warm_start = True, 
                                   n_estimators = 26,
                                   max_depth = 6, 
                                   max_features = 'sqrt')
@@ -206,5 +206,5 @@ np.max(cv_score)))
  
 final_pred = pipeline.predict(df_test)
 submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
-submission.to_csv("input/piplimoon_RandomForest_jiahong_randomseed_12.csv", index=False) 
+submission.to_csv("input/piplimoon_RandomForest_jiahong_randomseed_51.csv", index=False) 
  
