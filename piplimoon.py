@@ -256,10 +256,10 @@ params = {
     'learning_rate': [0.1, 0.5],
    'colsample_bytree': [0.5, 0.8,  1],
     'max_depth': [3, 4, 5],
-}'''
+}
 
 params = {
-#'learning_rate': [0.05, 0.1],
+'learning_rate':[i/100.0 for i in range(5,35,5)],
     'n_estimators': [300, 500, 700],
   'max_depth':range(3,10,1),
  'min_child_weight':range(1,6,1),
@@ -267,6 +267,24 @@ params = {
  'colsample_bytree':[i/10.0 for i in range(6,10)],
 'reg_alpha':[1e-5, 1e-2, 0.1, 1, 100],
  'gamma':[i/10.0 for i in range(0,5)]
+ 
+}
+'''
+'''
+params = {
+'learning_rate':[0.3],
+'n_estimators': [400],
+'max_depth':[3],
+'min_child_weight':[5],
+ 'subsample':[0.6],
+ 'colsample_bytree':[0.9],
+'reg_alpha':[0.8],
+ 'gamma':[0.0]
+
+}'''
+
+params = {
+    'n_estimators':[100,300,500,700,1000,2000,1500],
 }
 gs = GridSearchCV(xgb_grid, params, cv=5, scoring='roc_auc', verbose=10, n_jobs= 1)        #accuracy
 gs.fit(df_train, df_target)
@@ -278,11 +296,12 @@ print gs.best_score_
 
 
 predictions = gs.predict(df_test).astype(int)
-
+'''predictions2 = gs.best_estimator_.predict(df_test).astype(int)
+predictions-predictions2'''
  
 submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": predictions })
 submission.to_csv\
-("input/grid search first success.csv", index=False) 
+("input/xgb only search number of trees.csv", index=False) 
 print 'success, done!!!'
  
  
