@@ -219,7 +219,7 @@ gbm_params = {
     'n_estimators': [300, 1000],
     'max_depth': [2, 3, 10],
 }
-cv = StratifiedKFold(df_target) # when n_fold = 3, 0.77033
+cv = StratifiedKFold(df_target,n_folds=5) # when n_fold = 3, 0.77033
 grid = GridSearchCV(gbm, gbm_params,scoring='roc_auc',cv=cv,verbose=10,n_jobs=1)
 grid.fit(df_train, df_target)
 
@@ -248,7 +248,7 @@ import xgboost as xgb
 
 
 xgb_grid = xgb.XGBClassifier()
-
+'''
 params = {
     'n_estimators':[100,300,500,700,1000,2000,1500],
 
@@ -256,10 +256,21 @@ params = {
     'learning_rate': [0.1, 0.5],
    'colsample_bytree': [0.5, 0.8,  1],
     'max_depth': [3, 4, 5],
-}
+}'''
 
-gs = GridSearchCV(xgb_grid, params, cv=5, scoring='roc_auc', n_jobs= 1)        #accuracy
+params = {
+#'learning_rate': [0.05, 0.1],
+    'n_estimators': [300, 500, 700],
+  'max_depth':range(3,10,1),
+ 'min_child_weight':range(1,6,1),
+ 'subsample':[i/10.0 for i in range(6,10)],
+ 'colsample_bytree':[i/10.0 for i in range(6,10)],
+'reg_alpha':[1e-5, 1e-2, 0.1, 1, 100],
+ 'gamma':[i/10.0 for i in range(0,5)]
+}
+gs = GridSearchCV(xgb_grid, params, cv=5, scoring='roc_auc', verbose=10, n_jobs= 1)        #accuracy
 gs.fit(df_train, df_target)
+
 print gs.best_params_
 print gs.best_score_
 
