@@ -209,8 +209,27 @@ submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived
 submission.to_csv("input/piplimoon_RandomForest_jiahong_randomseed_51.csv", index=False) 
  
  
+ ######################################
+from sklearn.cross_validation import StratifiedKFold
  
- 
+gbm = xgb.XGBClassifier()
+gbm_params = {
+    'learning_rate': [0.05, 0.1],
+    'n_estimators': [300, 1000],
+    'max_depth': [2, 3, 10],
+}
+cv = StratifiedKFold(df_target)
+grid = GridSearchCV(gbm, gbm_params,scoring='roc_auc',cv=cv,verbose=10,n_jobs=2)
+grid.fit(df_train, df_target)
+
+print (grid.best_params_)
+
+# You can experiment with many other options here, using the same .fit() and .predict()
+# methods; see http://scikit-learn.org
+# This example uses the current build of XGBoost, from https://github.com/dmlc/xgboost
+# gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_X, train_y)
+predictions = grid.best_estimator_.predict(df_test)
+
  
  
  
