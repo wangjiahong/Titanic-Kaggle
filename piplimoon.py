@@ -206,12 +206,13 @@ np.max(cv_score)))
  
 final_pred = pipeline.predict(df_test)
 submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
-submission.to_csv("input/piplimoon_RandomForest_jiahong_randomseed_51.csv", index=False) 
+submission.to_csv\
+("input/grid search first success.csv", index=False) 
  
  
  ######################################
 from sklearn.cross_validation import StratifiedKFold
- 
+import xgboost as xgb
 gbm = xgb.XGBClassifier()
 gbm_params = {
     'learning_rate': [0.05, 0.1],
@@ -219,10 +220,10 @@ gbm_params = {
     'max_depth': [2, 3, 10],
 }
 cv = StratifiedKFold(df_target)
-grid = GridSearchCV(gbm, gbm_params,scoring='roc_auc',cv=cv,verbose=10,n_jobs=2)
+grid = GridSearchCV(gbm, gbm_params,scoring='roc_auc',cv=cv,verbose=10,n_jobs=1)
 grid.fit(df_train, df_target)
 
-print (grid.best_params_)
+print (grid.best_params_, grid.best_score_)
 
 # You can experiment with many other options here, using the same .fit() and .predict()
 # methods; see http://scikit-learn.org
@@ -230,7 +231,11 @@ print (grid.best_params_)
 # gbm = xgb.XGBClassifier(max_depth=3, n_estimators=300, learning_rate=0.05).fit(train_X, train_y)
 predictions = grid.best_estimator_.predict(df_test)
 
- 
+
+submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": predictions })
+submission.to_csv\
+("input/grid search first success.csv", index=False) 
+print 'success, done!!!'
  
  
  
