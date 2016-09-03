@@ -219,7 +219,7 @@ gbm_params = {
     'n_estimators': [300, 1000],
     'max_depth': [2, 3, 10],
 }
-cv = StratifiedKFold(df_target)
+cv = StratifiedKFold(df_target) # when n_fold = 3, 0.77033
 grid = GridSearchCV(gbm, gbm_params,scoring='roc_auc',cv=cv,verbose=10,n_jobs=1)
 grid.fit(df_train, df_target)
 
@@ -250,15 +250,15 @@ import xgboost as xgb
 xgb_grid = xgb.XGBClassifier()
 
 params = {
-       # 'n_estimators':[100,300,500,700,1000,2000,1500],
- 'n_estimators':[300,700],
+    'n_estimators':[100,300,500,700,1000,2000,1500],
+
     'subsample': [0.8, 0.7, 0.9, 1],
-    'learning_rate': [0.01, 0.05, 0.08], #, 0.1, 0.5
-    'colsample_bytree': [0.7, 0.8,  0.9],  #'colsample_bytree': [0.5, 0.8,  1],
-    'max_depth': [2, 3, 4,5],  #  'max_depth': [3, 4, 5],
+    'learning_rate': [0.1, 0.5],
+   'colsample_bytree': [0.5, 0.8,  1],
+    'max_depth': [3, 4, 5],
 }
 
-gs = GridSearchCV(xgb_grid, params, cv=5, scoring='roc_auc', n_jobs= 4)        #accuracy
+gs = GridSearchCV(xgb_grid, params, cv=5, scoring='roc_auc', n_jobs= 1)        #accuracy
 gs.fit(df_train, df_target)
 print gs.best_params_
 print gs.best_score_
@@ -267,17 +267,12 @@ print gs.best_score_
 
 
 predictions = gs.predict(df_test).astype(int)
-predictions
-output = predictions
 
-
-predictions_file = open("input/29 august.csv", "wb") 
-open_file_object = csv.writer(predictions_file)
-open_file_object.writerow(["PassengerId","Survived"])
-open_file_object.writerows(zip(ids, output))
-predictions_file.close()
-print 'Done.'
  
+submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": predictions })
+submission.to_csv\
+("input/grid search first success.csv", index=False) 
+print 'success, done!!!'
  
  
  
