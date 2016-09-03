@@ -128,16 +128,17 @@ from sklearn.grid_search import GridSearchCV
 import xgboost as xgb
 
 
-xgb_grid = xgb.XGBClassifier(n_estimators=1000, subsample = 0.8)
+xgb_grid = xgb.XGBClassifier()
 
 params = {
   #  'subsample': [0.8, 0.7, 0.9, 1],
+    'n_estimators':[300],
     'learning_rate': [0.01, 0.05, 0.08], #, 0.1, 0.5
     'colsample_bytree': [0.7, 0.8,  0.9],  #'colsample_bytree': [0.5, 0.8,  1],
     'max_depth': [2, 3, 4],  #  'max_depth': [3, 4, 5],
 }
 
-gs = GridSearchCV(xgb_grid, params, cv=5, scoring='accuracy', n_jobs= 1)        #accuracy
+gs = GridSearchCV(xgb_grid, params, cv=5, scoring='accuracy',verbose = 9, n_jobs= 1)        #accuracy
 gs.fit(train_data[0::,1::], train_data[0::,0])
 print gs.best_params_
 print gs.best_score_
@@ -150,7 +151,7 @@ predictions
 output = predictions
 
 
-predictions_file = open("input/29 august.csv", "wb") 
+predictions_file = open("input/xgb, use rich features.csv", "wb") 
 open_file_object = csv.writer(predictions_file)
 open_file_object.writerow(["PassengerId","Survived"])
 open_file_object.writerows(zip(ids, output))

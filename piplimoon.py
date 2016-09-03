@@ -270,7 +270,7 @@ params = {
  
 }
 '''
-'''
+
 params = {
 'learning_rate':[0.3],
 'n_estimators': [400],
@@ -281,19 +281,33 @@ params = {
 'reg_alpha':[0.8],
  'gamma':[0.0]
 
+}
+'''
+params = {
+    'n_estimators':[100,300,500,700,1000,2000,1500],
 }'''
 
 params = {
-    'n_estimators':[100,300,500,700,1000,2000,1500],
+'learning_rate':[0.3],
+'n_estimators': [300, 400, 500,600,700,800],
+'max_depth':[3],
+'min_child_weight':[5],
+ 'subsample':[0.6],
+ 'colsample_bytree':[0.9],
+'reg_alpha':[0.8],
+ 'gamma':[0.0]
+
 }
-gs = GridSearchCV(xgb_grid, params, cv=5, scoring='roc_auc', verbose=10, n_jobs= 1)        #accuracy
+gs = GridSearchCV(xgb_grid, params, cv=4, scoring='roc_auc', verbose=10, n_jobs= 1)        #accuracy
 gs.fit(df_train, df_target)
 
 print gs.best_params_
 print gs.best_score_
 
 
+list(df_train.columns)
 
+temp = 
 
 predictions = gs.predict(df_test).astype(int)
 '''predictions2 = gs.best_estimator_.predict(df_test).astype(int)
