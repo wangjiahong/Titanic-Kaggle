@@ -1,3 +1,1 @@
-# Kaggle
-
-## Jiahong's Kaggle competition ---Titanic Machine learning
+##Kaggle competition ---Titanic Machine learning
