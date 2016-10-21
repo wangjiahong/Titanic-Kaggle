@@ -10,9 +10,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from time import time
+import os
+os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
 
-titanic_train = pd.read_csv("../input/train.csv", dtype={"Age": np.float64}, )
-titanic_test = pd.read_csv("../input/test.csv", dtype={"Age": np.float64}, )
+titanic_train = pd.read_csv("input/train.csv", dtype={"Age": np.float64}, )
+titanic_test = pd.read_csv("input/test.csv", dtype={"Age": np.float64}, )
 
 train_set = titanic_train.drop("Survived", axis = 1)
 df_combo = pd.concat((train_set, titanic_test), axis = 0, ignore_index = True)
