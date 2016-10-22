@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Apr 11 22:20:54 2016
-
-@author: ReshamSarkar
-"""
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,12 +6,14 @@ from time import time
 import os
 os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
 
+
 titanic_train = pd.read_csv("input/train.csv", dtype={"Age": np.float64}, )
 titanic_test = pd.read_csv("input/test.csv", dtype={"Age": np.float64}, )
 
 train_set = titanic_train.drop("Survived", axis = 1)
 df_combo = pd.concat((train_set, titanic_test), axis = 0, ignore_index = True)
 
+# Fill NA 'Embarked'
 df_combo["Embarked"] = df_combo["Embarked"].fillna("C")
 
 Title_list = pd.DataFrame(index = df_combo.index, columns = ["Title"])
@@ -39,7 +34,6 @@ for j in NL_1:
 
 
 #Title and Surname Extraction
-
 Title_Dictionary = {
 "Capt": "Officer",
 "Col": "Officer",
