@@ -6,7 +6,7 @@ from time import time
 import os
 os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
 
-
+# Read data
 titanic_train = pd.read_csv("input/train.csv", dtype={"Age": np.float64}, )
 titanic_test = pd.read_csv("input/test.csv", dtype={"Age": np.float64}, )
 
@@ -15,6 +15,7 @@ df_combo = pd.concat((train_set, titanic_test), axis = 0, ignore_index = True)
 
 # Fill NA 'Embarked'
 df_combo["Embarked"] = df_combo["Embarked"].fillna("C")
+
 
 Title_list = pd.DataFrame(index = df_combo.index, columns = ["Title"])
 Surname_list = pd.DataFrame(index = df_combo.index, columns = ["Surname"])
