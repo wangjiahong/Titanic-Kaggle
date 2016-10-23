@@ -155,6 +155,13 @@ Age_Sex_Title_Pclass_missing["Age"]  = Age_Sex_Title_Pclass_missing.apply(Age_fi
 
 df_combo["Age"] = pd.concat([Age_Sex_Title_Pclass["Age"], Age_Sex_Title_Pclass_missing["Age"]])    
 
+## new method
+######################
+T_AgeMedians = data.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc='median')
+df_combo['Age'] = df_combo.apply( (lambda x: T_AgeMedians[x.Title, x.Sex, x.Pclass] if pd.isnull(x.Age) else x.Age), axis=1 )
+##############
+
+
 dumdum = (df_combo.Embarked == "S") & (df_combo.Pclass == 3)
 df_combo.fillna(df_combo[dumdum].Fare.median(), inplace = True)
 
@@ -204,5 +211,13 @@ np.max(cv_score)))
  
 final_pred = pipeline.predict(df_test)
 submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
+
+###
+#make test
+orginal_result = pd.read_csv("RandomForest_v1.csv")
+###
+
+
+
 submission.to_csv("RandomForest_v1.csv", index=False) 
  
