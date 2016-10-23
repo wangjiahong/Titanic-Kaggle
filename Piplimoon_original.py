@@ -59,17 +59,20 @@ Title_Dictionary = {
 def Title_Label(s):
     return Title_Dictionary[s]
 
+# Add column 'Title'
 df_combo["Title"] = Title_list["Title"].apply(Title_Label)
     
 
 Surname_Fam = pd.concat([Surname_list, df_combo[["SibSp", "Parch"]]], axis = 1)
 Surname_Fam["Fam"] = Surname_Fam.Parch + Surname_Fam.SibSp + 1
 
+# dataframe: surname and family size
 Surname_Fam = Surname_Fam.drop(["SibSp", "Parch"], axis = 1)
 
+# Add column 'surname' and 'family size'
 df_combo = pd.concat([df_combo, Surname_Fam], axis = 1)
 
-
+# Add column 'Cabin_Code'
 Cabin_List = df_combo.loc[:,["Cabin"]]
 Cabin_List = Cabin_List.fillna("UNK")
 Cabin_Code = []
@@ -79,6 +82,7 @@ Cabin_Code = pd.DataFrame({"Deck" : Cabin_Code})
 df_combo = pd.concat([df_combo, Cabin_Code], axis = 1)
 
 
+# Add Family size label
 def Fam_label(s):
     if (s >= 2) & (s <= 4):
         return 2
@@ -86,10 +90,9 @@ def Fam_label(s):
         return 1
     elif (s > 7):
         return 0
-
 df_combo["Fam"] = df_combo.loc[:,"Fam"].apply(Fam_label)
 
-
+# Add title label
 def Title_label(s):
     if (s == "Sir") | (s == "Lady"):
         return "Royalty"
@@ -97,18 +100,18 @@ def Title_label(s):
         return "Officer"
     else:
         return s
-        
 df_combo["Title"] = df_combo.loc[:,"Title"].apply(Title_label)     
 
-
+# remove space and dots from ticket prices
 def tix_clean(j):
     j = j.replace(".", "")
     j = j.replace("/", "")
     j = j.replace(" ", "")
     return j
-    
 df_combo[["Ticket"]] = df_combo.loc[:,"Ticket"].apply(tix_clean)
 
+
+# Add column 'ticket group'
 Ticket_count = dict(df_combo.Ticket.value_counts())
 
 def Tix_ct(y):
@@ -125,10 +128,11 @@ def Tix_label(s):
 
 df_combo["TicketGrp"] = df_combo.loc[:,"TicketGrp"].apply(Tix_label)   
 
+## DELETE un-used columns
 df_combo.drop(["PassengerId", "Name", "Ticket", "Surname", "Cabin", "Parch", "SibSp"], axis=1, inplace = True)
 
-## Filling missing Age data
 
+## Filling missing Age data
 mask_Age = df_combo.Age.notnull()
 Age_Sex_Title_Pclass = df_combo.loc[mask_Age, ["Age", "Title", "Sex", "Pclass"]]
 Filler_Ages = Age_Sex_Title_Pclass.groupby(by = ["Title", "Pclass", "Sex"]).median()
