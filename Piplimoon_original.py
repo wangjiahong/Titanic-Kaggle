@@ -157,7 +157,7 @@ df_combo["Age"] = pd.concat([Age_Sex_Title_Pclass["Age"], Age_Sex_Title_Pclass_m
 
 ## new method
 ######################
-T_AgeMedians = data.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc='median')
+T_AgeMedians = df_combo.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc='median')
 df_combo['Age'] = df_combo.apply( (lambda x: T_AgeMedians[x.Title, x.Sex, x.Pclass] if pd.isnull(x.Age) else x.Age), axis=1 )
 ##############
 
@@ -212,12 +212,10 @@ np.max(cv_score)))
 final_pred = pipeline.predict(df_test)
 submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
 
-###
-#make test
+
+#make test to make sure my change did not affect the result:
 orginal_result = pd.read_csv("RandomForest_v1.csv")
-###
-
-
+print 'The current version has %d difference with the orginal version result:' %(len(set(submission.Survived - orginal_result.Survived))-1)
 
 submission.to_csv("RandomForest_v1.csv", index=False) 
  
