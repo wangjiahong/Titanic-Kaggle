@@ -31,34 +31,35 @@ for j in NL_1:
     ctr = ctr + 1
 
 
-#Title and Surname Extraction
-Title_Dictionary = {
-"Capt": "Officer",
-"Col": "Officer",
-"Major": "Officer",
-"Jonkheer": "Sir",
-"Don": "Sir",
-"Sir" : "Sir",
-"Dr": "Dr",
-"Rev": "Rev",
-"theCountess": "Lady",
-"Dona": "Lady",
-"Mme": "Mrs",
-"Mlle": "Miss",
-"Ms": "Mrs",
-"Mr" : "Mr",
-"Mrs" : "Mrs",
-"Miss" : "Miss",
-"Master" : "Master",
-"Lady" : "Lady"
-}    
+# add_Title: Title and Surname Extraction
+def add_Title(df_combo = df_combo):
+    Title_Dictionary = {
+                        "Capt": "Officer",
+                        "Col": "Officer",
+                        "Major": "Officer",
+                        "Jonkheer": "Sir",
+                        "Don": "Sir",
+                        "Sir" : "Sir",
+                        "Dr": "Dr",
+                        "Rev": "Rev",
+                        "theCountess": "Lady",
+                        "Dona": "Lady",
+                        "Mme": "Mrs",
+                        "Mlle": "Miss",
+                        "Ms": "Mrs",
+                        "Mr" : "Mr",
+                        "Mrs" : "Mrs",
+                        "Miss" : "Miss",
+                        "Master" : "Master",
+                        "Lady" : "Lady"
+                        }       
     
-def Title_Label(s):
-    return Title_Dictionary[s]
+    def Title_Label(s):
+        return Title_Dictionary[s]
 
-# Add column 'Title'
-df_combo["Title"] = Title_list["Title"].apply(Title_Label)
-    
+    # Add column 'Title'
+    df_combo["Title"] = Title_list["Title"].apply(Title_Label)
+add_Title(df_combo)    
 
 Surname_Fam = pd.concat([Surname_list, df_combo[["SibSp", "Parch"]]], axis = 1)
 Surname_Fam["Fam"] = Surname_Fam.Parch + Surname_Fam.SibSp + 1
