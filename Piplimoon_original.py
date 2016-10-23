@@ -1,8 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from time import time
 import os
 os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
 
@@ -133,42 +130,15 @@ df_combo.drop(["PassengerId", "Name", "Ticket", "Surname", "Cabin", "Parch", "Si
 
 
 ## Filling missing Age data
-mask_Age = df_combo.Age.notnull()
-Age_Sex_Title_Pclass = df_combo.loc[mask_Age, ["Age", "Title", "Sex", "Pclass"]]
-Filler_Ages = Age_Sex_Title_Pclass.groupby(by = ["Title", "Pclass", "Sex"]).median()
-Filler_Ages = Filler_Ages.Age.unstack(level = -1).unstack(level = -1)
-
-
-mask_Age = df_combo.Age.isnull()
-Age_Sex_Title_Pclass_missing = df_combo.loc[mask_Age, ["Title", "Sex", "Pclass"]]
-
-def Age_filler(row):
-    if row.Sex == "female":
-        age = Filler_Ages.female.loc[row["Title"], row["Pclass"]]
-        return age
-    
-    elif row.Sex == "male":
-        age = Filler_Ages.male.loc[row["Title"], row["Pclass"]]
-        return age
-    
-Age_Sex_Title_Pclass_missing["Age"]  = Age_Sex_Title_Pclass_missing.apply(Age_filler, axis = 1)   
-
-df_combo["Age"] = pd.concat([Age_Sex_Title_Pclass["Age"], Age_Sex_Title_Pclass_missing["Age"]])    
-
-## new method
-######################
 T_AgeMedians = df_combo.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc='median')
 df_combo['Age'] = df_combo.apply( (lambda x: T_AgeMedians[x.Title, x.Sex, x.Pclass] if pd.isnull(x.Age) else x.Age), axis=1 )
-##############
 
 
 dumdum = (df_combo.Embarked == "S") & (df_combo.Pclass == 3)
 df_combo.fillna(df_combo[dumdum].Fare.median(), inplace = True)
 
 
-#df_combo["Age"] = (df_combo["Age"] - df_combo["Age"].mean())/df_combo["Age"].std()
-#df_combo["Fare"] = (df_combo["Fare"] - df_combo["Fare"].mean())/df_combo["Fare"].std()
-    
+
 #### OHE encoding nominal categorical features ###
 df_combo = pd.get_dummies(df_combo)
 
@@ -183,8 +153,6 @@ from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.feature_selection import SelectKBest
 from sklearn import cross_validation, metrics
 from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
-
-
 from sklearn.pipeline import make_pipeline
 
 select = SelectKBest(k = 20)
@@ -204,9 +172,8 @@ predict_proba = pipeline.predict_proba(df_train)[:,1]
 cv_score = cross_validation.cross_val_score(pipeline, df_train, df_target, cv= 10)
 print("Accuracy : %.4g" % metrics.accuracy_score(df_target.values, predictions))
 print("AUC Score (Train): %f" % metrics.roc_auc_score(df_target, predict_proba))
-print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" % (np.mean(cv_score), np.std(cv_score), 
-np.min(cv_score),
-np.max(cv_score)))
+print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" \
+      % (np.mean(cv_score), np.std(cv_score), np.min(cv_score),np.max(cv_score)))
 
  
 final_pred = pipeline.predict(df_test)
@@ -215,7 +182,8 @@ submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived
 
 #make test to make sure my change did not affect the result:
 orginal_result = pd.read_csv("RandomForest_v1.csv")
-print 'The current version has %d difference with the orginal version result:' %(len(set(submission.Survived - orginal_result.Survived))-1)
+print 'The current version has %d difference with the orginal version result:'\
+         %(len(set(submission.Survived - orginal_result.Survived))-1)
 
 submission.to_csv("RandomForest_v1.csv", index=False) 
  
