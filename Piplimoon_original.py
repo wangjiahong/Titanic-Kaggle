@@ -20,16 +20,18 @@ def makeFeatureEngineering(df):
     df = simplifyTitle(df)
     df = addFamilySize(df)
     df = addDeckCodeFromCabinCode(df)
+    df = devideFamilySizeInto3Groups(df)
+    df = devideTitlesInto2groups(df)
     return df
 
 
-
+    
+    
 def fill_null_embarked(df):
     # Fill NA 'Embarked' with "C"
     df["Embarked"] = df["Embarked"].fillna("C")
     return df
-
-
+    
 
 def addTitle(df):
     for i in xrange(len(df)):
@@ -66,46 +68,43 @@ def addFamilySize(df):
     ## Add family size
     df["Fam"] = df.Parch + df.SibSp + 1
     return df
-
-
-
-
-
     
-# Add deck code
+
 def addDeckCodeFromCabinCode(df):
+    # Add deck code
     df["Cabin"] = df.Cabin.fillna("UNK")
     for i in xrange(len(df.index)):
         df.ix[i, "Deck"] = df.ix[i, 'Cabin'][:1]
     return df
     
+def devideFamilySizeInto3Groups(df):
+    # Add Family size label
+
+    for i in xrange(len(df.index)):
+        df.ix[df.Fam.isin([2,3,4]), "Fam"] = 2
+        df.ix[df.Fam.isin([1,5,6,7]), "Fam"] = 1
+        df.ix[df.Fam> 7, "Fam"] = 0
+    return df
+
+              
+def devideTitlesInto2groups(df):
+    # Add title label
     
+    for i in xrange(len(df.index)):
+        df.ix[df.Title.isin(["Sir","Lady"]), "Title"] = "Royalty"
+        df.ix[df.Title.isin(["Dr", "Officer", "Rev"]), "Title"] = "Officer"
+    return df
+    
+
+        
+
+
+
 df_combo = makeFeatureEngineering(df_combo)
 
 
-# Add Family size label
-def Fam_label(s):
-    if (s >= 2) & (s <= 4):
-        return 2
-    elif ((s > 4) & (s <= 7)) | (s == 1):
-        return 1
-    elif (s > 7):
-        return 0
-df_combo["Fam"] = df_combo.loc[:,"Fam"].apply(Fam_label)
 
 
-
-
-
-# Add title label
-def Title_label(s):
-    if (s == "Sir") | (s == "Lady"):
-        return "Royalty"
-    elif (s == "Dr") | (s == "Officer") | (s == "Rev"):
-        return "Officer"
-    else:
-        return s
-df_combo["Title"] = df_combo.loc[:,"Title"].apply(Title_label)     
 
 # remove space and dots from ticket prices
 df_combo[["Ticket"]] = df_combo.loc[:,"Ticket"].replace(".", "").replace("/", "").replace(" ", "")
