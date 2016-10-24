@@ -1,3 +1,7 @@
+df = df_combo
+df.head()
+reset
+
 import pandas as pd
 import numpy as np
 import os
@@ -23,9 +27,6 @@ def fill_null_embarked(df):
     df["Embarked"] = df["Embarked"].fillna("C")
     return df
 
-df = df_combo
-df = addTitle(df)
-df.head()
 
 
 def addTitle(df):
@@ -63,7 +64,9 @@ df_combo = makeFeatureEngineering(df_combo)
 
 
 ## Add family size
-df_combo["Fam"] = df_combo.Parch + df_combo.SibSp + 1
+def addFamilySize(df):
+    df["Fam"] = df.Parch + df.SibSp + 1
+    return df
 
 
 # Add column 'Cabin_Code'
