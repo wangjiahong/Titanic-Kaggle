@@ -18,6 +18,8 @@ def makeFeatureEngineering(df):
     df = fill_null_embarked(df)
     df = addTitle(df)
     df = simplifyTitle(df)
+    df = addFamilySize(df)
+    df = addDeckCodeFromCabinCode(df)
     return df
 
 
@@ -59,24 +61,26 @@ def simplifyTitle(df):
     for i in xrange(len(df.index)):
         df.ix[i, 'Title'] = titleDictionary[df.ix[i, 'Title']]
     return df
-
-df_combo = makeFeatureEngineering(df_combo)
-
-
-## Add family size
+    
 def addFamilySize(df):
+    ## Add family size
     df["Fam"] = df.Parch + df.SibSp + 1
     return df
 
 
-# Add column 'Cabin_Code'
-Cabin_List = df_combo.loc[:,["Cabin"]]
-Cabin_List = Cabin_List.fillna("UNK")
-Cabin_Code = []
-for j in Cabin_List.Cabin:
-    Cabin_Code.append(j[0])
-Cabin_Code = pd.DataFrame({"Deck" : Cabin_Code})
-df_combo = pd.concat([df_combo, Cabin_Code], axis = 1)
+
+
+
+    
+# Add deck code
+def addDeckCodeFromCabinCode(df):
+    df["Cabin"] = df.Cabin.fillna("UNK")
+    for i in xrange(len(df.index)):
+        df.ix[i, "Deck"] = df.ix[i, 'Cabin'][:1]
+    return df
+    
+    
+df_combo = makeFeatureEngineering(df_combo)
 
 
 # Add Family size label
@@ -88,6 +92,10 @@ def Fam_label(s):
     elif (s > 7):
         return 0
 df_combo["Fam"] = df_combo.loc[:,"Fam"].apply(Fam_label)
+
+
+
+
 
 # Add title label
 def Title_label(s):
