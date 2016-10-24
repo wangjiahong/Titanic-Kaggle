@@ -10,8 +10,55 @@ titanic_test = pd.read_csv("input/test.csv", dtype={"Age": np.float64}, )
 train_set = titanic_train.drop("Survived", axis = 1)
 df_combo = pd.concat((train_set, titanic_test), axis = 0, ignore_index = True)
 
-# Fill NA 'Embarked'
-df_combo["Embarked"] = df_combo["Embarked"].fillna("C")
+def makeFeatureEngineering(df):
+    df = fill_null_embarked(df)
+    
+    return df
+
+
+# Fill NA 'Embarked' with "C"
+def fill_null_embarked(df):
+    df["Embarked"] = df["Embarked"].fillna("C")
+    return df
+
+df = df_combo
+df = addTitle(df)
+df.head()
+
+
+def addTitle(df):
+    for i in xrange(len(df)):
+        df.ix[i, "Title"] = df.ix[i, "Name"].split(",")[1].split(".")[0].replace(" ", "")
+    return df
+df.Name[1]
+df.Name[:2]
+    
+titleDictionary = {
+                        "Capt": "Officer",
+                        "Col": "Officer",
+                        "Major": "Officer",
+                        "Jonkheer": "Sir",
+                        "Don": "Sir",
+                        "Sir" : "Sir",
+                        "Dr": "Dr",
+                        "Rev": "Rev",
+                        "theCountess": "Lady",
+                        "Dona": "Lady",
+                        "Mme": "Mrs",
+                        "Mlle": "Miss",
+                        "Ms": "Mrs",
+                        "Mr" : "Mr",
+                        "Mrs" : "Mrs",
+                        "Miss" : "Miss",
+                        "Master" : "Master",
+                        "Lady" : "Lady"
+                        }
+    
+def simplifyTitle(df):
+    for i in xrange(len(df.index)):
+        df.ix[i, 'Title'] = titleDictionary[df.ix[i, 'Title']]
+    return df
+
 
 
 Title_list = pd.DataFrame(index = df_combo.index, columns = ["Title"])
@@ -30,6 +77,9 @@ for j in NL_1:
     Title_list.loc[ctr, "Title"] = str(FullName)
     ctr = ctr + 1
 
+    
+    
+    
 
 # add_Title: Title and Surname Extraction
 def add_Title(df_combo = df_combo):
@@ -59,7 +109,8 @@ def add_Title(df_combo = df_combo):
 
     # Add column 'Title'
     df_combo["Title"] = Title_list["Title"].apply(Title_Label)
-add_Title(df_combo)    
+df_combo = add_Title(df_combo)    
+
 
 Surname_Fam = pd.concat([Surname_list, df_combo[["SibSp", "Parch"]]], axis = 1)
 Surname_Fam["Fam"] = Surname_Fam.Parch + Surname_Fam.SibSp + 1
@@ -101,12 +152,7 @@ def Title_label(s):
 df_combo["Title"] = df_combo.loc[:,"Title"].apply(Title_label)     
 
 # remove space and dots from ticket prices
-def tix_clean(j):
-    j = j.replace(".", "")
-    j = j.replace("/", "")
-    j = j.replace(" ", "")
-    return j
-df_combo[["Ticket"]] = df_combo.loc[:,"Ticket"].apply(tix_clean)
+df_combo[["Ticket"]] = df_combo.loc[:,"Ticket"].replace(".", "").replace("/", "").replace(" ", "")
 
 
 # Add column 'ticket group'
