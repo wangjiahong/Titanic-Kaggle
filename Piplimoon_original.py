@@ -97,8 +97,6 @@ def devideTitlesInto2groups(df):
     
 
         
-df.Title
-
 
 df_combo = makeFeatureEngineering(df_combo)
 
@@ -109,7 +107,7 @@ df_combo = makeFeatureEngineering(df_combo)
 # remove space and dots from ticket prices
 df_combo[["Ticket"]] = df_combo.loc[:,"Ticket"].replace(".", "").replace("/", "").replace(" ", "")
 
-
+df.Ticket
 # Add column 'ticket group'
 Ticket_count = dict(df_combo.Ticket.value_counts())
 
@@ -187,5 +185,4 @@ orginal_result = pd.read_csv("RandomForest_v1.csv")
 print 'The current version has %d difference with the orginal version result:'\
          %(len(set(submission.Survived - orginal_result.Survived))-1)
 
-submission.to_csv("RandomForest_v1.csv", index=False) 
- 
+submission.to_csv("RandomForest_v1_the new.csv", index=False) 
