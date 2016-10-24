@@ -102,29 +102,6 @@ df_combo = makeFeatureEngineering(df_combo)
 
 
 
-
-
-# remove space and dots from ticket prices
-df_combo[["Ticket"]] = df_combo.loc[:,"Ticket"].replace(".", "").replace("/", "").replace(" ", "")
-
-df.Ticket
-# Add column 'ticket group'
-Ticket_count = dict(df_combo.Ticket.value_counts())
-
-def Tix_ct(y):
-    return Ticket_count[y]
-
-df_combo["TicketGrp"] = df_combo.Ticket.apply(Tix_ct)
-def Tix_label(s):
-    if (s >= 2) & (s <= 4):
-        return 2
-    elif ((s > 4) & (s <= 8)) | (s == 1):
-        return 1
-    elif (s > 8):
-        return 0
-
-df_combo["TicketGrp"] = df_combo.loc[:,"TicketGrp"].apply(Tix_label)   
-
 ## DELETE un-used columns
 df_combo.drop(["PassengerId", "Name", "Ticket", "Cabin", "Parch", "SibSp"], axis=1, inplace = True)
 
@@ -183,6 +160,7 @@ submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived
 #make test to make sure my change did not affect the result:
 orginal_result = pd.read_csv("RandomForest_v1.csv")
 print 'The current version has %d difference with the orginal version result:'\
-         %(len(set(submission.Survived - orginal_result.Survived))-1)
+         %(sum(submission.Survived != orginal_result.Survived))
 
-submission.to_csv("RandomForest_v1_the new.csv", index=False) 
+         
+submission.to_csv("RandomForest_v2 without ticket group.csv", index=False) 
