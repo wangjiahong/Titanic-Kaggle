@@ -97,7 +97,7 @@ def devideTitlesInto2groups(df):
     
 
         
-
+df.Title
 
 
 df_combo = makeFeatureEngineering(df_combo)
