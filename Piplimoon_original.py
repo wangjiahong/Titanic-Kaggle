@@ -60,7 +60,70 @@ def simplifyTitle(df):
     return df
 
 df_combo = makeFeatureEngineering(df_combo)
+"""
+Title_list = pd.DataFrame(index = df_combo.index, columns = ["Title"])
+Surname_list = pd.DataFrame(index = df_combo.index, columns = ["Surname"])
+Name_list = list(df_combo.Name)
+NL_1 = [elem.split("\n") for elem in Name_list]
+ctr = 0
+for j in NL_1:
+    FullName = j[0]
+    FullName = FullName.split(",")
+    Surname_list.loc[ctr,"Surname"] = FullName[0]
+    FullName = FullName.pop(1)
+    FullName = FullName.split(".")
+    FullName = FullName.pop(0)
+    FullName = FullName.replace(" ", "")
+    Title_list.loc[ctr, "Title"] = str(FullName)
+    ctr = ctr + 1
 
+    
+    
+    
+
+# add_Title: Title and Surname Extraction
+def add_Title(df_combo = df_combo):
+    Title_Dictionary = {
+                        "Capt": "Officer",
+                        "Col": "Officer",
+                        "Major": "Officer",
+                        "Jonkheer": "Sir",
+                        "Don": "Sir",
+                        "Sir" : "Sir",
+                        "Dr": "Dr",
+                        "Rev": "Rev",
+                        "theCountess": "Lady",
+                        "Dona": "Lady",
+                        "Mme": "Mrs",
+                        "Mlle": "Miss",
+                        "Ms": "Mrs",
+                        "Mr" : "Mr",
+                        "Mrs" : "Mrs",
+                        "Miss" : "Miss",
+                        "Master" : "Master",
+                        "Lady" : "Lady"
+                        }       
+    
+    def Title_Label(s):
+        return Title_Dictionary[s]
+
+    # Add column 'Title'
+    df_combo["Title"] = Title_list["Title"].apply(Title_Label)
+df_combo = add_Title(df_combo)    
+"""
+
+Surname_Fam = pd.concat([Surname_list, df_combo[["SibSp", "Parch"]]], axis = 1)
+Surname_Fam["Fam"] = Surname_Fam.Parch + Surname_Fam.SibSp + 1
+
+# dataframe: surname and family size
+Surname_Fam = Surname_Fam.drop(["SibSp", "Parch"], axis = 1)
+
+# Add column 'surname' and 'family size'
+df_combo = pd.concat([df_combo, Surname_Fam], axis = 1)
+
+
+## Add family size
+df_combo["Fam"] = df_combo.Parch + df_combo.SibSp + 1
 
 
 # Add column 'Cabin_Code'
