@@ -12,7 +12,8 @@ df_combo = pd.concat((train_set, titanic_test), axis = 0, ignore_index = True)
 
 def makeFeatureEngineering(df):
     df = fill_null_embarked(df)
-    
+    df = addTitle(df)
+    df = simplifyTitle(df)
     return df
 
 
@@ -30,9 +31,7 @@ def addTitle(df):
     for i in xrange(len(df)):
         df.ix[i, "Title"] = df.ix[i, "Name"].split(",")[1].split(".")[0].replace(" ", "")
     return df
-df.Name[1]
-df.Name[:2]
-    
+
 titleDictionary = {
                         "Capt": "Officer",
                         "Col": "Officer",
@@ -59,8 +58,8 @@ def simplifyTitle(df):
         df.ix[i, 'Title'] = titleDictionary[df.ix[i, 'Title']]
     return df
 
-
-
+df_combo = makeFeatureEngineering(df_combo)
+"""
 Title_list = pd.DataFrame(index = df_combo.index, columns = ["Title"])
 Surname_list = pd.DataFrame(index = df_combo.index, columns = ["Surname"])
 Name_list = list(df_combo.Name)
@@ -110,7 +109,7 @@ def add_Title(df_combo = df_combo):
     # Add column 'Title'
     df_combo["Title"] = Title_list["Title"].apply(Title_Label)
 df_combo = add_Title(df_combo)    
-
+"""
 
 Surname_Fam = pd.concat([Surname_list, df_combo[["SibSp", "Parch"]]], axis = 1)
 Surname_Fam["Fam"] = Surname_Fam.Parch + Surname_Fam.SibSp + 1
@@ -120,6 +119,9 @@ Surname_Fam = Surname_Fam.drop(["SibSp", "Parch"], axis = 1)
 
 # Add column 'surname' and 'family size'
 df_combo = pd.concat([df_combo, Surname_Fam], axis = 1)
+
+df_combo["Fam"] = df_combo.Parch + df_combo.SibSp + 1
+
 
 # Add column 'Cabin_Code'
 Cabin_List = df_combo.loc[:,["Cabin"]]
@@ -173,7 +175,7 @@ def Tix_label(s):
 df_combo["TicketGrp"] = df_combo.loc[:,"TicketGrp"].apply(Tix_label)   
 
 ## DELETE un-used columns
-df_combo.drop(["PassengerId", "Name", "Ticket", "Surname", "Cabin", "Parch", "SibSp"], axis=1, inplace = True)
+df_combo.drop(["PassengerId", "Name", "Ticket", "Cabin", "Parch", "SibSp"], axis=1, inplace = True)
 
 
 ## Filling missing Age data
