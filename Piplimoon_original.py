@@ -16,8 +16,8 @@ df_combo = pd.concat((train_set, titanic_test), axis = 0, ignore_index = True)
 
 def makeFeatureEngineering(df):
     df = fill_null_embarked(df)
-    df = addTitle(df)
-    df = simplifyTitle(df)
+    df = add_title(df)
+    df = simplify_title(df)
     df = addFamilySize(df)
     df = addDeckCodeFromCabinCode(df)
     df = devideFamilySizeInto3Groups(df)
@@ -33,7 +33,7 @@ def fill_null_embarked(df):
     return df
     
 
-def addTitle(df):
+def add_title(df):
     for i in xrange(len(df)):
         df.ix[i, "Title"] = df.ix[i, "Name"].split(",")[1].split(".")[0].replace(" ", "")
     return df
@@ -59,7 +59,7 @@ titleDictionary = {
                         "Lady" : "Lady"
                         }
     
-def simplifyTitle(df):
+def simplify_title(df):
     for i in xrange(len(df.index)):
         df.ix[i, 'Title'] = titleDictionary[df.ix[i, 'Title']]
     return df
