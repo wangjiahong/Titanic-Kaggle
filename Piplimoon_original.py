@@ -18,10 +18,10 @@ def makeFeatureEngineering(df):
     df = fill_null_embarked(df)
     df = add_title(df)
     df = simplify_title(df)
-    df = addFamilySize(df)
-    df = addDeckCodeFromCabinCode(df)
-    df = devideFamilySizeInto3Groups(df)
-    df = devideTitlesInto2groups(df)
+    df = add_family_size(df)
+    df = add_deck_code_from_cabin_code(df)
+    df = divide_family_size_into_3_groups(df)
+    df = divide_title_into_2_groups(df)
     return df
 
 
@@ -64,20 +64,20 @@ def simplify_title(df):
         df.ix[i, 'Title'] = titleDictionary[df.ix[i, 'Title']]
     return df
     
-def addFamilySize(df):
+def add_family_size(df):
     ## Add family size
     df["Fam"] = df.Parch + df.SibSp + 1
     return df
     
 
-def addDeckCodeFromCabinCode(df):
+def add_deck_code_from_cabin_code(df):
     # Add deck code
     df["Cabin"] = df.Cabin.fillna("UNK")
     for i in xrange(len(df.index)):
         df.ix[i, "Deck"] = df.ix[i, 'Cabin'][:1]
     return df
     
-def devideFamilySizeInto3Groups(df):
+def divide_family_size_into_3_groups(df):
     # Add Family size label
 
     for i in xrange(len(df.index)):
@@ -87,7 +87,7 @@ def devideFamilySizeInto3Groups(df):
     return df
 
               
-def devideTitlesInto2groups(df):
+def divide_title_into_2_groups(df):
     # Add title label
     
     for i in xrange(len(df.index)):
