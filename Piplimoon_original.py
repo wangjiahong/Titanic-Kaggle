@@ -139,16 +139,15 @@ from sklearn import cross_validation, metrics
 from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
 from sklearn.pipeline import make_pipeline
 
-select = SelectKBest(k = 20)
+kbest = SelectKBest(k = 20)
 clf = RandomForestClassifier(random_state = 10,
                              warm_start = True, 
                              n_estimators = 26,
                              max_depth = 6, 
                              max_features = 'sqrt'
                              )
-pipeline = make_pipeline(select, clf)               
+pipeline = make_pipeline(kbest, clf)               
  
-#select.fit(df_train, df_target)
 
 pipeline.fit(df_train, df_target)
 predictions = pipeline.predict(df_train)
