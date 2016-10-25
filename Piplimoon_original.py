@@ -1,6 +1,4 @@
-df = df_combo
-df.head()
-reset
+
 
 import pandas as pd
 import numpy as np
@@ -15,13 +13,20 @@ train_set = titanic_train.drop("Survived", axis = 1)
 df_combo = pd.concat((train_set, titanic_test), axis = 0, ignore_index = True)
 
 def makeFeatureEngineering(df):
+    
     df = fill_null_embarked(df)
+    
     df = add_title(df)
     df = simplify_title(df)
+    
     df = add_family_size(df)
     df = add_deck_code_from_cabin_code(df)
     df = divide_family_size_into_3_groups(df)
     df = divide_title_into_2_groups(df)
+    
+    df = delete_not_used_columns(df)
+    df = fill_null_age(df)
+    df = fill_null_fare(df)
     return df
 
 
@@ -95,34 +100,36 @@ def divide_title_into_2_groups(df):
         df.ix[df.Title.isin(["Dr", "Officer", "Rev"]), "Title"] = "Officer"
     return df
     
+def delete_not_used_columns(df):
+    df.drop(["PassengerId", "Name", "Ticket", "Cabin", "Parch", "SibSp"], axis=1, inplace = True)
+    return df
 
+
+def fill_null_age(df):
+    T_AgeMedians = df.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc='median')
+    df['Age'] = df.apply( (lambda x: T_AgeMedians[x.Title, x.Sex, x.Pclass] if pd.isnull(x.Age) else x.Age), axis=1 )
+    return df
+
+
+def fill_null_fare(df):
+    dumdum = (df.Embarked == "S") & (df.Pclass == 3)
+    df.fillna(df[dumdum].Fare.median(), inplace = True)
+    return df
+    
         
 
 df_combo = makeFeatureEngineering(df_combo)
 
 
 
-## DELETE un-used columns
-df_combo.drop(["PassengerId", "Name", "Ticket", "Cabin", "Parch", "SibSp"], axis=1, inplace = True)
-
-
-## Filling missing Age data
-T_AgeMedians = df_combo.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc='median')
-df_combo['Age'] = df_combo.apply( (lambda x: T_AgeMedians[x.Title, x.Sex, x.Pclass] if pd.isnull(x.Age) else x.Age), axis=1 )
-
-
-dumdum = (df_combo.Embarked == "S") & (df_combo.Pclass == 3)
-df_combo.fillna(df_combo[dumdum].Fare.median(), inplace = True)
-
-
-
 #### OHE encoding nominal categorical features ###
 df_combo = pd.get_dummies(df_combo)
 
+n_train_rows = len(titanic_train["Survived"])
 
-df_train = df_combo.loc[0:len(titanic_train["Survived"])-1]
-df_test = df_combo.loc[len(titanic_train["Survived"]):]
-total_number_param = len(df_train.columns)
+df_train = df_combo.loc[0:n_train_rows-1]
+df_test = df_combo.loc[n_train_rows: ]
+                       
 df_target = titanic_train.Survived
 
 from sklearn.pipeline import Pipeline
@@ -133,10 +140,12 @@ from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
 from sklearn.pipeline import make_pipeline
 
 select = SelectKBest(k = 20)
-clf = RandomForestClassifier(random_state = 10, warm_start = True, 
-                                  n_estimators = 26,
-                                  max_depth = 6, 
-                                  max_features = 'sqrt')
+clf = RandomForestClassifier(random_state = 10,
+                             warm_start = True, 
+                             n_estimators = 26,
+                             max_depth = 6, 
+                             max_features = 'sqrt'
+                             )
 pipeline = make_pipeline(select, clf)               
  
 #select.fit(df_train, df_target)
