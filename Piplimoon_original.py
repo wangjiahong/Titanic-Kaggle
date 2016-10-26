@@ -107,6 +107,8 @@ def delete_not_used_columns(df):
 
 def fill_null_age(df):
     T_AgeMedians = df.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc='median')
+    #df_combo.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc=len)
+
     df['Age'] = df.apply( (lambda x: T_AgeMedians[x.Title, x.Sex, x.Pclass] if pd.isnull(x.Age) else x.Age), axis=1 )
     return df
 
@@ -115,6 +117,8 @@ def fill_null_fare(df):
     dumdum = (df.Embarked == "S") & (df.Pclass == 3)
     df.fillna(df[dumdum].Fare.median(), inplace = True)
     return df
+    
+    
     
         
 
