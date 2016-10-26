@@ -107,7 +107,7 @@ def delete_not_used_columns(df):
 
 def fill_null_age(df):
     T_AgeMedians = df.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc='median')
-    #df_combo.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc=len)
+    #df_combo.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc=len, fill_value=0)
 
     df['Age'] = df.apply( (lambda x: T_AgeMedians[x.Title, x.Sex, x.Pclass] if pd.isnull(x.Age) else x.Age), axis=1 )
     return df
