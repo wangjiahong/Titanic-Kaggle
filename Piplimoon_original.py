@@ -152,12 +152,13 @@ X_train, X_test, y_train, y_test = sklearn.cross_validation.train_test_split(df_
 ​
  
 parameters = dict(max_features = range(2,24,2),
-              n_estimators=[26],
+              n_estimators=[26, 20,50,100,200],
               min_samples_split=[2, 3, 4, 5, 10]) 
 
 cv = sklearn.grid_search.GridSearchCV(clf, param_grid=parameters, cv = 10,
                                       scoring='roc_auc',
-                                      verbose=10)
+                                      verbose=10,
+                                      n_jobs = -1)
 cv.fit(X_train, y_train)
 cv.best_score_
 cv.best_params_
