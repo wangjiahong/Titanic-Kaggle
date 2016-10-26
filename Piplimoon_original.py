@@ -3,8 +3,8 @@
 import pandas as pd
 import numpy as np
 import os
-#os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
-os.chdir("Z:\Titanic-Kaggle")
+os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
+#os.chdir("Z:\Titanic-Kaggle")
 # Read data
 titanic_train = pd.read_csv("input/train.csv", dtype={"Age": np.float64}, )
 titanic_test = pd.read_csv("input/test.csv", dtype={"Age": np.float64}, )
@@ -132,32 +132,39 @@ df_test = df_combo.loc[n_train_rows: ]
                        
 df_target = titanic_train.Survived
 
+X_train, y_train = df_train, df_target
+​
+
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.feature_selection import SelectKBest
 from sklearn import cross_validation, metrics
 from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
 from sklearn.pipeline import make_pipeline
+import sklearn
+
 
 kbest = SelectKBest(k = 20)
-randomforest = RandomForestClassifier(random_state = 10,
+randomforest = RandomForestClassifier(
                              warm_start = True, 
                              
                              max_depth = 6, 
                              max_features = 'sqrt'
                              )
-pipeline = make_pipeline(kbest, clf)               
-import sklearn
-X_train, y_train = df_train, df_target
-​
- 
-parameters = dict(max_features = range(2,24,2),
-              n_estimators=[26, 50,200],
-              min_samples_split=[2, 3, 4, 5, 10]) 
+pipeline = make_pipeline(kbest, randomforest)               
 
-clf = sklearn.grid_search.GridSearchCV(randomforest, param_grid=parameters, cv = 10,
-                                      scoring='roc_auc',
-                                      verbose=10)
+ 
+parameters = dict(
+              n_estimators=[26, 50,200,500],
+              min_samples_split=[2, 3,4,  5, 7,10]
+                    ) 
+
+clf = sklearn.grid_search.GridSearchCV(randomforest, 
+                                       param_grid=parameters, 
+                                       cv = 10,
+                                      scoring='accuracy',
+                                      verbose=10
+                                     )
 clf.fit(X_train, y_train)
 clf.best_score_
 clf.best_params_
@@ -175,7 +182,7 @@ print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" \
       % (np.mean(cv_score), np.std(cv_score), np.min(cv_score),np.max(cv_score)))
 
  
-final_pred = cv.predict(df_test)
+final_pred = clf.predict(df_test)
 submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
 
 
@@ -185,4 +192,4 @@ print 'The current version has %d difference with the orginal version result:'\
          %(sum(submission.Survived != orginal_result.Survived))
 
          
-submission.to_csv("RandomForest_v2 without ticket group.csv", index=False) 
+submission.to_csv("RandomForest_v2 grid search cv.csv", index=False) 
