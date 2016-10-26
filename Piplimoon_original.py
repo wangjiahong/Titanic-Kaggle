@@ -162,10 +162,11 @@ parameters = dict(
 clf = sklearn.grid_search.GridSearchCV(randomforest, 
                                        param_grid=parameters, 
                                        cv = 10,
-                                      scoring='accuracy',
+                                      scoring='roc_auc',
                                       verbose=10
                                      )
 clf.fit(X_train, y_train)
+pipeline.fit(X_train, y_train)
 clf.best_score_
 clf.best_params_
 predictions = clf.predict(X_test)
@@ -192,4 +193,6 @@ print 'The current version has %d difference with the orginal version result:'\
          %(sum(submission.Survived != orginal_result.Survived))
 
          
-submission.to_csv("RandomForest_v2 grid search cv.csv", index=False) 
+submission.to_csv("RandomForest_v2 grid search cv 50 trees min spilit 10 roc_auc.csv", index=False) 
+
+
