@@ -1,4 +1,4 @@
-##Kaggle competition: Titanic Machine learning
+##Kaggle competition: Titanic Machine learning 
 
 Best solution ranks top 4% on leaderboard. (187th out of 5535 teams)
 
