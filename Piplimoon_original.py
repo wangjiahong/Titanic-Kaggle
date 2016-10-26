@@ -140,7 +140,7 @@ from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
 from sklearn.pipeline import make_pipeline
 
 kbest = SelectKBest(k = 20)
-ramdomforest = RandomForestClassifier(random_state = 10,
+randomforest = RandomForestClassifier(random_state = 10,
                              warm_start = True, 
                              
                              max_depth = 6, 
@@ -148,17 +148,16 @@ ramdomforest = RandomForestClassifier(random_state = 10,
                              )
 pipeline = make_pipeline(kbest, clf)               
 import sklearn
-X_train, X_test, y_train, y_test = sklearn.cross_validation.train_test_split(df_train, df_target, test_size=0.33, random_state=42)
+X_train, y_train = df_train, df_target
 ​
  
 parameters = dict(max_features = range(2,24,2),
-              n_estimators=[26, 20,50,100,200],
+              n_estimators=[26, 50,200],
               min_samples_split=[2, 3, 4, 5, 10]) 
 
 clf = sklearn.grid_search.GridSearchCV(randomforest, param_grid=parameters, cv = 10,
                                       scoring='roc_auc',
-                                      verbose=10,
-                                      n_jobs = -1)
+                                      verbose=10)
 clf.fit(X_train, y_train)
 clf.best_score_
 clf.best_params_
