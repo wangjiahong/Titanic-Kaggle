@@ -196,3 +196,8 @@ print 'The current version has %d difference with the orginal version result:'\
 submission.to_csv("RandomForest_v2 grid search cv 50 trees min spilit 10 roc_auc.csv", index=False) 
 
 
+import PlayLegendOfTheFall
+playMusic()
+stopMusic()
+
+
