@@ -140,7 +140,7 @@ from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
 from sklearn.pipeline import make_pipeline
 
 kbest = SelectKBest(k = 20)
-clf = RandomForestClassifier(random_state = 10,
+ramdomforest = RandomForestClassifier(random_state = 10,
                              warm_start = True, 
                              
                              max_depth = 6, 
@@ -155,15 +155,15 @@ parameters = dict(max_features = range(2,24,2),
               n_estimators=[26, 20,50,100,200],
               min_samples_split=[2, 3, 4, 5, 10]) 
 
-cv = sklearn.grid_search.GridSearchCV(clf, param_grid=parameters, cv = 10,
+clf = sklearn.grid_search.GridSearchCV(randomforest, param_grid=parameters, cv = 10,
                                       scoring='roc_auc',
                                       verbose=10,
                                       n_jobs = -1)
-cv.fit(X_train, y_train)
-cv.best_score_
-cv.best_params_
-predictions = cv.predict(X_test)
-predict_proba = cv.predict_proba(X_train)[:,1]
+clf.fit(X_train, y_train)
+clf.best_score_
+clf.best_params_
+predictions = clf.predict(X_test)
+predict_proba = clf.predict_proba(X_train)[:,1]
 sklearn.metrics.classification_report( y_test, predictions )
 sklearn.metrics.accuracy_score(y_test, predictions)
   
