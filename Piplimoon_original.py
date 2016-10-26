@@ -3,7 +3,7 @@
 import pandas as pd
 import numpy as np
 import os
-os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
+#os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
 os.chdir("Z:\Titanic-Kaggle")
 # Read data
 titanic_train = pd.read_csv("input/train.csv", dtype={"Age": np.float64}, )
@@ -142,17 +142,31 @@ from sklearn.pipeline import make_pipeline
 kbest = SelectKBest(k = 20)
 clf = RandomForestClassifier(random_state = 10,
                              warm_start = True, 
-                             n_estimators = 26,
+                             
                              max_depth = 6, 
                              max_features = 'sqrt'
                              )
 pipeline = make_pipeline(kbest, clf)               
+import sklearn
+X_train, X_test, y_train, y_test = sklearn.cross_validation.train_test_split(df_train, df_target, test_size=0.33, random_state=42)
+​
  
+parameters = dict(max_features = range(2,24,2),
+              n_estimators=[26],
+              min_samples_split=[2, 3, 4, 5, 10]) 
 
-pipeline.fit(df_train, df_target)
-predictions = pipeline.predict(df_train)
-predict_proba = pipeline.predict_proba(df_train)[:,1]
-
+cv = sklearn.grid_search.GridSearchCV(clf, param_grid=parameters, cv = 10,
+                                      scoring='roc_auc',
+                                      verbose=10)
+cv.fit(X_train, y_train)
+cv.best_score_
+cv.best_params_
+predictions = cv.predict(X_test)
+predict_proba = cv.predict_proba(X_train)[:,1]
+sklearn.metrics.classification_report( y_test, predictions )
+sklearn.metrics.accuracy_score(y_test, predictions)
+  
+ 
  
 cv_score = cross_validation.cross_val_score(pipeline, df_train, df_target, cv= 10)
 print("Accuracy : %.4g" % metrics.accuracy_score(df_target.values, predictions))
@@ -161,7 +175,7 @@ print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" \
       % (np.mean(cv_score), np.std(cv_score), np.min(cv_score),np.max(cv_score)))
 
  
-final_pred = pipeline.predict(df_test)
+final_pred = cv.predict(df_test)
 submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
 
 
