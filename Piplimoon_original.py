@@ -3,8 +3,9 @@
 import pandas as pd
 import numpy as np
 import os
-os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
-#os.chdir("Z:\Titanic-Kaggle")
+os.chdir("Titanic-Kaggle")
+
+
 # Read data
 titanic_train = pd.read_csv("input/train.csv", dtype={"Age": np.float64}, )
 titanic_test = pd.read_csv("input/test.csv", dtype={"Age": np.float64}, )
