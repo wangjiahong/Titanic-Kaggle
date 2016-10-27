@@ -3,7 +3,7 @@
 import pandas as pd
 import numpy as np
 import os
-os.chdir("Titanic-Kaggle")
+os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
 
 
 # Read data
