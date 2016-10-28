@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Sep 03 23:42:59 2016
-
-@author: Jiahong
-"""
-
 
 import pandas as pd
 import xgboost as xgb
@@ -16,8 +9,8 @@ from sklearn.cross_validation import cross_val_score
 from sklearn.metrics import auc
 
 # Load the data
-train_df = pd.read_csv('input/train.csv', header=0)
-test_df = pd.read_csv('input/test.csv', header=0)
+train_df = pd.read_csv('Titanic-Kaggle/input/train.csv', header=0)
+test_df = pd.read_csv('Titanic-Kaggle/input/test.csv', header=0)
 
 # We'll impute missing values using the median for numeric columns and the most
 # common value for string columns.
@@ -76,4 +69,4 @@ predictions = grid.best_estimator_.predict(test_X)
 # for an example of what it's supposed to look like.
 submission = pd.DataFrame({ 'PassengerId': test_df['PassengerId'],
                             'Survived': predictions })
-submission.to_csv("input/grid saarch cv xgboost, submission.csv", index=False)
+submission.to_csv("Titanic-Kaggle/output/grid saarch cv xgboost, submission.csv", index=False)
