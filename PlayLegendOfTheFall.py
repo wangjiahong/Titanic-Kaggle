@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Oct 26 22:16:05 2016
 
-@author: Jiahong
-"""
 import pygame
 from pygame import mixer
 import glob
@@ -12,10 +7,7 @@ from random import randint
 
 musics = glob.glob("J:/MY MUSIC/nice mood/*.mp3")
 
-
-
 n_musics = len(musics)
-
 
 
 def playMusic():
