@@ -10,6 +10,8 @@ musics = glob.glob("J:/MY MUSIC/nice mood/*.mp3")
 n_musics = len(musics)
 
 
+
+
 def playMusic():
     # Generate random number:
     random_number = randint(0, len(musics)- 1)
