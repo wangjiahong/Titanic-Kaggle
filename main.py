@@ -18,8 +18,8 @@ def makeFeatureEngineering(df):
 
     
     df = add_title(df)
-    df = simplify_title(df)
-    df = divide_title_into_2_groups(df)
+    #df = simplify_title(df)
+    #df = divide_title_into_2_groups(df)
     
     df = add_family_size(df)
     df = divide_family_size_into_3_groups(df)
@@ -27,9 +27,9 @@ def makeFeatureEngineering(df):
     df = add_deck_code_from_cabin_code(df)
 
         
-    df = delete_not_used_columns(df)
+    #df = delete_not_used_columns(df)
     
-    df = fill_null_age(df)
+    #df = fill_null_age(df)
     df = fill_null_fare(df)
     
     return df
@@ -120,7 +120,23 @@ def fill_null_fare(df):
     return df
     
     
-    
+########
+df = df_combo
+df.Title
+df_combo.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc=len, fill_value=0)
+df_combo.Title
+train = titanic_train
+
+train = makeFeatureEngineering(titanic_train)
+train.columns
+train.groupby(['Title'])['Age'].mean()
+train.groupby(['Title'])['Age'].count()
+
+train[train.Age.isnull()]
+train[train.Title == 'Master']
+train.Age
+titanic_train.Age.isnull()
+#########    
         
 
 df_combo = makeFeatureEngineering(df_combo)
@@ -265,4 +281,8 @@ print 'The current version has %d difference with the orginal version result:'\
          %(sum(submission.Survived != orginal_result.Survived))
 
 
+         
+#Accuracy : 0.8676
+#AUC Score (Train): 0.918171         
+         
 submission.to_csv("RandomForest_v1.csv", index=False) 
