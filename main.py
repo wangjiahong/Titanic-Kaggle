@@ -206,3 +206,62 @@ play_a_random_music.playMusic()
 play_a_random_music.stopMusic()
 
 
+
+
+
+
+
+
+#**********************************************************************
+#----------------------------------------------------------------------
+#**********************************************************************
+
+#### OHE encoding nominal categorical features ###
+df_combo = pd.get_dummies(df_combo)
+
+n_train_rows = len(titanic_train["Survived"])
+
+df_train = df_combo.loc[0:n_train_rows-1]
+df_test = df_combo.loc[n_train_rows: ]
+                       
+df_target = titanic_train.Survived
+
+from sklearn.pipeline import Pipeline
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from sklearn.feature_selection import SelectKBest
+from sklearn import cross_validation, metrics
+from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
+from sklearn.pipeline import make_pipeline
+
+kbest = SelectKBest(k = 20)
+clf = RandomForestClassifier(random_state = 10,
+                             warm_start = True, 
+                             n_estimators = 26,
+                             max_depth = 6, 
+                             max_features = 'sqrt'
+                             )
+pipeline = make_pipeline(kbest, clf)               
+ 
+
+pipeline.fit(df_train, df_target)
+predictions = pipeline.predict(df_train)
+predict_proba = pipeline.predict_proba(df_train)[:,1]
+
+ 
+cv_score = cross_validation.cross_val_score(pipeline, df_train, df_target, cv= 10)
+print("Accuracy : %.4g" % metrics.accuracy_score(df_target.values, predictions))
+print("AUC Score (Train): %f" % metrics.roc_auc_score(df_target, predict_proba))
+print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" \
+      % (np.mean(cv_score), np.std(cv_score), np.min(cv_score),np.max(cv_score)))
+
+ 
+final_pred = pipeline.predict(df_test)
+submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
+
+
+#make test to make sure my change did not affect the result:
+orginal_result = pd.read_csv("RandomForest_v1.csv")
+print 'The current version has %d difference with the orginal version result:'\
+         %(sum(submission.Survived != orginal_result.Survived))
+
+

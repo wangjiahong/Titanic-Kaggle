@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Aug 11 23:15:22 2016
-
-@author: Jiahong
-"""
 
 import xgboost as xgb
 
