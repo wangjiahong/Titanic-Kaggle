@@ -9,6 +9,7 @@ os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
 # Read data
 titanic_train = pd.read_csv("input/train.csv", dtype={"Age": np.float64}, )
 titanic_test = pd.read_csv("input/test.csv", dtype={"Age": np.float64}, )
+titanic_train.Age
 
 train_set = titanic_train.drop("Survived", axis = 1)
 df_combo = pd.concat((train_set, titanic_test), axis = 0, ignore_index = True)
@@ -29,8 +30,8 @@ def makeFeatureEngineering(df):
         
     #df = delete_not_used_columns(df)
     
-    #df = fill_null_age(df)
-    df = fill_null_fare(df)
+    ###################df = fill_null_age(df)
+    #df = fill_null_fare(df)
     
     return df
 
@@ -116,7 +117,7 @@ def fill_null_age(df):
 
 def fill_null_fare(df):
     dumdum = (df.Embarked == "S") & (df.Pclass == 3)
-    df.fillna(df[dumdum].Fare.median(), inplace = True)
+    df.Fare.fillna(df[dumdum].Fare.median(), inplace = True)
     return df
     
     
@@ -131,11 +132,12 @@ train = makeFeatureEngineering(titanic_train)
 train.columns
 train.groupby(['Title'])['Age'].mean()
 train.groupby(['Title'])['Age'].count()
-
+sum(train.Age == 8.05)
 train[train.Age.isnull()]
 train[train.Title == 'Master']
 train.Age
 titanic_train.Age.isnull()
+sum(df_combo.Age == 8.05)
 #########    
         
 
