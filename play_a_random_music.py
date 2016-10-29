@@ -1,3 +1,5 @@
+#This scripts will play a song randomly from my local disk, which is used to notify me when my algorithm is completed. 
+
 
 import pygame
 from pygame import mixer
