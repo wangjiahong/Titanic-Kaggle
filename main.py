@@ -69,30 +69,27 @@ def simplify_title(df):
 def divide_title_into_2_groups(df):
     # Add title label
     
-    for i in xrange(len(df.index)):
-        df.ix[df.Title.isin(["Sir","Lady"]), "Title"] = "Royalty"
-        df.ix[df.Title.isin(["Dr", "Officer", "Rev"]), "Title"] = "Officer"
+    df.ix[df.Title.isin(["Sir","Lady"]), "Title"] = "Royalty"
+    df.ix[df.Title.isin(["Dr", "Officer", "Rev"]), "Title"] = "Officer"
     return df
     
     
     
 def add_family_size(df):
-    ## Add family size
     df["Fam"] = df.Parch + df.SibSp + 1
     return df
 
 def divide_family_size_into_3_groups(df):
-    for i in xrange(len(df.index)):
-        df.ix[df.Fam.isin([2,3,4]), "Fam"] = 2
-        df.ix[df.Fam.isin([1,5,6,7]), "Fam"] = 1
-        df.ix[df.Fam> 7, "Fam"] = 0
+
+    df.ix[df.Fam.isin([2,3,4]), "Fam"] = 2
+    df.ix[df.Fam.isin([1,5,6,7]), "Fam"] = 1
+    df.ix[df.Fam> 7, "Fam"] = 0
     return df
     
 
 def add_deck_code_from_cabin_code(df):
     df["Cabin"] = df.Cabin.fillna("UNK")
-    for i in xrange(len(df.index)):
-        df.ix[i, "Deck"] = df.ix[i, 'Cabin'][:1]    # get "U" from "UKN"
+    df["Deck"] = df['Cabin'][:1]    # get "U" from "UKN"
     return df
     
 
