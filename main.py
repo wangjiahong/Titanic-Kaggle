@@ -18,8 +18,8 @@ def makeFeatureEngineering(df):
 
     
     df = add_title(df)
-    #df = simplify_title(df)
-    #df = divide_title_into_2_groups(df)
+    df = simplify_title(df)
+    df = divide_title_into_2_groups(df)
     
     df = add_family_size(df)
     df = divide_family_size_into_3_groups(df)
@@ -27,7 +27,7 @@ def makeFeatureEngineering(df):
     df = add_deck_code_from_cabin_code(df)
 
         
-    #df = delete_not_used_columns(df)
+    df = delete_not_used_columns(df)
     
     #df = fill_null_age(df)
     #df = fill_null_fare(df)
@@ -122,6 +122,7 @@ def fill_null_fare(df):
     
 ########
 df = df_combo
+df.Fare
 df.Title
 df_combo.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc=len, fill_value=0)
 df_combo.Title
@@ -139,10 +140,19 @@ titanic_train.Age.isnull()
 sum(df_combo.Age == 8.05)
 #########  
 
-df_combo.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc=len, fill_value=0)
+df.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc=len, fill_value=0)
 df.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc='median')
   
-        
+df[df.Age.isnull()].Title.unique()
+
+T_AgeMedians = df.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc='median')
+
+T_count = df.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc=len, fill_value=0)
+
+
+
+
+
 
 df_combo = makeFeatureEngineering(df_combo)
 
@@ -276,6 +286,8 @@ print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" \
       % (np.mean(cv_score), np.std(cv_score), np.min(cv_score),np.max(cv_score)))
 
  
+
+
 final_pred = pipeline.predict(df_test)
 submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
 
