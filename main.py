@@ -82,10 +82,9 @@ def add_family_size(df):
     return df
 
 def divide_family_size_into_3_groups(df):
-    for i in xrange(len(df.index)):
-        df.ix[df.Fam.isin([2,3,4]), "Fam"] = 2
-        df.ix[df.Fam.isin([1,5,6,7]), "Fam"] = 1
-        df.ix[df.Fam> 7, "Fam"] = 0
+    df.ix[df.Fam.isin([2,3,4]), "Fam"] = 2
+    df.ix[df.Fam.isin([1,5,6,7]), "Fam"] = 1
+    df.ix[df.Fam> 7, "Fam"] = 0
     return df
     
 
