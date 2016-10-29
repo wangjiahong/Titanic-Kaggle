@@ -29,8 +29,8 @@ def makeFeatureEngineering(df):
         
     df = delete_not_used_columns(df)
     
-    #df = fill_null_age(df)
-    #df = fill_null_fare(df)
+    df = fill_null_age(df)
+    df = fill_null_fare(df)
     
     return df
 
@@ -264,7 +264,7 @@ from sklearn import cross_validation, metrics
 from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
 from sklearn.pipeline import make_pipeline
 
-kbest = SelectKBest(k = 20)
+kbest = SelectKBest(k = 19)
 clf = RandomForestClassifier(random_state = 10,
                              warm_start = True, 
                              n_estimators = 26,
@@ -302,4 +302,4 @@ print 'The current version has %d difference with the orginal version result:'\
 #Accuracy : 0.8676
 #AUC Score (Train): 0.918171         
          
-submission.to_csv("RandomForest_v1.csv", index=False) 
+submission.to_csv("RandomForest_v2.csv", index=False) 
