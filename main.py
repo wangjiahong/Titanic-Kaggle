@@ -13,37 +13,33 @@ titanic_test = pd.read_csv("input/test.csv", dtype={"Age": np.float64}, )
 train_set = titanic_train.drop("Survived", axis = 1)
 df_combo = pd.concat((train_set, titanic_test), axis = 0, ignore_index = True)
 
-def makeFeatureEngineering(df):
-    
+def makeFeatureEngineering(df):  
     df = fill_null_embarked(df)
+
     
     df = add_title(df)
     df = simplify_title(df)
-    
-    df = add_family_size(df)
-    df = add_deck_code_from_cabin_code(df)
-    df = divide_family_size_into_3_groups(df)
     df = divide_title_into_2_groups(df)
     
+    df = add_family_size(df)
+    df = divide_family_size_into_3_groups(df)
+    
+    df = add_deck_code_from_cabin_code(df)
+
+        
     df = delete_not_used_columns(df)
+    
     df = fill_null_age(df)
     df = fill_null_fare(df)
+    
     return df
-
-
-    
-    
-def fill_null_embarked(df):
-    # Fill NA 'Embarked' with "C"
-    df["Embarked"] = df["Embarked"].fillna("C")
-    return df
-    
 
 def add_title(df):
     for i in xrange(len(df)):
         df.ix[i, "Title"] = df.ix[i, "Name"].split(",")[1].split(".")[0].replace(" ", "")
     return df
 
+    
 titleDictionary = {
                         "Capt": "Officer",
                         "Col": "Officer",
@@ -70,29 +66,6 @@ def simplify_title(df):
         df.ix[i, 'Title'] = titleDictionary[df.ix[i, 'Title']]
     return df
     
-def add_family_size(df):
-    ## Add family size
-    df["Fam"] = df.Parch + df.SibSp + 1
-    return df
-    
-
-def add_deck_code_from_cabin_code(df):
-    # Add deck code
-    df["Cabin"] = df.Cabin.fillna("UNK")
-    for i in xrange(len(df.index)):
-        df.ix[i, "Deck"] = df.ix[i, 'Cabin'][:1]
-    return df
-    
-def divide_family_size_into_3_groups(df):
-    # Add Family size label
-
-    for i in xrange(len(df.index)):
-        df.ix[df.Fam.isin([2,3,4]), "Fam"] = 2
-        df.ix[df.Fam.isin([1,5,6,7]), "Fam"] = 1
-        df.ix[df.Fam> 7, "Fam"] = 0
-    return df
-
-              
 def divide_title_into_2_groups(df):
     # Add title label
     
@@ -101,11 +74,41 @@ def divide_title_into_2_groups(df):
         df.ix[df.Title.isin(["Dr", "Officer", "Rev"]), "Title"] = "Officer"
     return df
     
+    
+    
+def add_family_size(df):
+    ## Add family size
+    df["Fam"] = df.Parch + df.SibSp + 1
+    return df
+
+def divide_family_size_into_3_groups(df):
+    for i in xrange(len(df.index)):
+        df.ix[df.Fam.isin([2,3,4]), "Fam"] = 2
+        df.ix[df.Fam.isin([1,5,6,7]), "Fam"] = 1
+        df.ix[df.Fam> 7, "Fam"] = 0
+    return df
+    
+
+def add_deck_code_from_cabin_code(df):
+    df["Cabin"] = df.Cabin.fillna("UNK")
+    for i in xrange(len(df.index)):
+        df.ix[i, "Deck"] = df.ix[i, 'Cabin'][:1]    # get "U" from "UKN"
+    return df
+    
+
+
+              
+
 def delete_not_used_columns(df):
     df.drop(["PassengerId", "Name", "Ticket", "Cabin", "Parch", "SibSp"], axis=1, inplace = True)
     return df
 
-
+def fill_null_embarked(df):
+    # Fill NA 'Embarked' with "C"
+    df["Embarked"] = df["Embarked"].fillna("C")
+    return df
+    
+    
 def fill_null_age(df):
     T_AgeMedians = df.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc='median')
     #df_combo.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc=len, fill_value=0)
@@ -265,3 +268,4 @@ print 'The current version has %d difference with the orginal version result:'\
          %(sum(submission.Survived != orginal_result.Survived))
 
 
+submission.to_csv("RandomForest_v1.csv", index=False) 
