@@ -69,9 +69,8 @@ def simplify_title(df):
 def divide_title_into_2_groups(df):
     # Add title label
     
-    for i in xrange(len(df.index)):
-        df.ix[df.Title.isin(["Sir","Lady"]), "Title"] = "Royalty"
-        df.ix[df.Title.isin(["Dr", "Officer", "Rev"]), "Title"] = "Officer"
+    df.ix[df.Title.isin(["Sir","Lady"]), "Title"] = "Royalty"
+    df.ix[df.Title.isin(["Dr", "Officer", "Rev"]), "Title"] = "Officer"
     return df
     
     
@@ -94,7 +93,6 @@ def add_deck_code_from_cabin_code(df):
         df.ix[i, "Deck"] = df.ix[i, 'Cabin'][:1]    # get "U" from "UKN"
     return df
     
-
 
               
 
