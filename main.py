@@ -236,10 +236,15 @@ play_a_random_music.playMusic()
 play_a_random_music.stopMusic()
 
 
-####Gridiant boosting classifier
+####*****************************
+#*******************************************Gridiant boosting classifier
 gridiantClf = GradientBoostingClassifier()
 
 gridiantClf.fit(X_train, y_train)
+
+predictions = gridiantClf.predict(df_train)
+predict_proba = gridiantClf.predict_proba(df_train)[:,1]
+
 
 cv_score = cross_validation.cross_val_score(gridiantClf, df_train, df_target, cv= 10)
 print("Accuracy : %.4g" % metrics.accuracy_score(df_target.values, predictions))
@@ -247,10 +252,13 @@ print("AUC Score (Train): %f" % metrics.roc_auc_score(df_target, predict_proba))
 print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" \
       % (np.mean(cv_score), np.std(cv_score), np.min(cv_score),np.max(cv_score)))
 
+final_pred = pipeline.predict(df_test)
+submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
 
+submission.to_csv("Gridiant boosting_V1.csv", index=False) 
 
 #**********************************************************************
-#----------------------------------------------------------------------
+#----------Piplimoon original version classifier------------------------------------------------------------
 #**********************************************************************
 
 #### OHE encoding nominal categorical features ###
