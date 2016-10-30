@@ -257,6 +257,11 @@ gridiantBoosting_grid_search = sklearn.grid_search.GridSearchCV(gridiantClf,
                                       verbose=0
                                      )
 gridiantBoosting_grid_search.fit(X_train, y_train)
+play_a_random_music.playMusic()
+
+
+gridiantBoosting_grid_search.best_score_
+gridiantBoosting_grid_search.best_params_
 
 
 
