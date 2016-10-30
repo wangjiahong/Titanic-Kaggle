@@ -198,7 +198,7 @@ clf = sklearn.grid_search.GridSearchCV(randomforest,
                                        param_grid=parameters, 
                                        cv = 10,
                                       scoring='roc_auc',
-                                      verbose=10
+                                      verbose=0
                                      )
 clf.fit(X_train, y_train)
 pipeline.fit(X_train, y_train)
@@ -206,8 +206,8 @@ clf.best_score_
 clf.best_params_
 predictions = clf.predict(X_test)
 predict_proba = clf.predict_proba(X_train)[:,1]
-sklearn.metrics.classification_report( y_test, predictions )
-sklearn.metrics.accuracy_score(y_test, predictions)
+sklearn.metrics.classification_report( df_target, predictions )
+sklearn.metrics.accuracy_score(df_target, predictions)
   
  
  
@@ -239,6 +239,28 @@ play_a_random_music.stopMusic()
 ####*****************************
 #*******************************************Gridiant boosting classifier
 gridiantClf = GradientBoostingClassifier()
+
+parameters = dict(learning_rate=[0.05, 0.1, 0.2, 0.3, 0.5, 0.6],
+
+              n_estimators=[26, 50 , 100, 200, 400, 700],
+                max_depth = [3,5,7,9],
+              min_samples_split=[2, 4, 6, 10],
+            min_samples_leaf  = [1,2,3]
+                    ) 
+
+
+
+gridiantBoosting_grid_search = sklearn.grid_search.GridSearchCV(gridiantClf, 
+                                       param_grid=parameters, 
+                                       cv = 10,
+                                      scoring='roc_auc',
+                                      verbose=0
+                                     )
+gridiantBoosting_grid_search.fit(X_train, y_train)
+
+
+
+
 
 gridiantClf.fit(X_train, y_train)
 
