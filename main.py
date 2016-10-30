@@ -149,7 +149,7 @@ T_AgeMedians = df.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc='
 
 T_count = df.pivot_table('Age', index=["Title", "Sex", "Pclass"], aggfunc=len, fill_value=0)
 
-
+###########
 
 
 
@@ -189,10 +189,9 @@ randomforest = RandomForestClassifier(
                              )
 pipeline = make_pipeline(kbest, randomforest)               
 
- 
 parameters = dict(
-              n_estimators=[26, 50,200,500],
-              min_samples_split=[2, 3,4,  5, 7,10]
+              n_estimators=[26],
+              min_samples_split=[2, 4,  10]
                     ) 
 
 clf = sklearn.grid_search.GridSearchCV(randomforest, 
@@ -237,9 +236,16 @@ play_a_random_music.playMusic()
 play_a_random_music.stopMusic()
 
 
+####Gridiant boosting classifier
+gridiantClf = GradientBoostingClassifier()
 
+gridiantClf.fit(X_train, y_train)
 
-
+cv_score = cross_validation.cross_val_score(gridiantClf, df_train, df_target, cv= 10)
+print("Accuracy : %.4g" % metrics.accuracy_score(df_target.values, predictions))
+print("AUC Score (Train): %f" % metrics.roc_auc_score(df_target, predict_proba))
+print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" \
+      % (np.mean(cv_score), np.std(cv_score), np.min(cv_score),np.max(cv_score)))
 
 
 
