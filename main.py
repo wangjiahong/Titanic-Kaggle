@@ -247,7 +247,7 @@ parameters = dict(learning_rate=[0.05, 0.1, 0.2, 0.3, 0.5, 0.6],
               min_samples_split=[2, 4, 6, 10],
             min_samples_leaf  = [1,2,3]
                     ) 
-
+    
 
 
 gridiantBoosting_grid_search = sklearn.grid_search.GridSearchCV(gridiantClf, 
@@ -264,7 +264,23 @@ gridiantBoosting_grid_search.best_score_
 gridiantBoosting_grid_search.best_params_
 
 
+#######
+predictions = gridiantBoosting_grid_search.predict(df_train)
+predict_proba = gridiantBoosting_grid_search.predict_proba(df_train)[:,1]
 
+
+cv_score = cross_validation.cross_val_score(gridiantBoosting_grid_search, df_train, df_target, cv= 10)
+print("Accuracy : %.4g" % metrics.accuracy_score(df_target.values, predictions))
+print("AUC Score (Train): %f" % metrics.roc_auc_score(df_target, predict_proba))
+print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" \
+      % (np.mean(cv_score), np.std(cv_score), np.min(cv_score),np.max(cv_score)))
+
+final_pred = gridiantBoosting_grid_search.predict(df_test)
+submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
+
+submission.to_csv("Gridiant boosting_V2.csv", index=False) 
+
+#####
 
 
 gridiantClf.fit(X_train, y_train)
