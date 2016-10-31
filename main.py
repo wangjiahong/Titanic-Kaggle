@@ -183,23 +183,27 @@ import sklearn
 
 kbest = SelectKBest(k = 20)
 randomforest = RandomForestClassifier(
-                             warm_start = True, 
+                             warm_start = True
                              
-                             max_depth = 6, 
-                             max_features = 'sqrt'
+                             #max_depth = 6
+                            # max_features = 'sqrt'
                              )
 pipeline = make_pipeline(kbest, randomforest)               
 
 parameters = dict(
-              n_estimators=[26],
-              min_samples_split=[2, 4,  10]
+              n_estimators=[26, 50, 100, 200, 500, 700, 1200],
+                max_features = ['sqrt','log2','8'],
+            max_depth = [5,6,7,8],
+              min_samples_split=[2,3, 4],
+                min_samples_leaf = [1,2,3]
                     ) 
 
 clf = sklearn.grid_search.GridSearchCV(randomforest, 
                                        param_grid=parameters, 
                                        cv = 10,
                                       scoring='roc_auc',
-                                      verbose=0
+                                      verbose=2, 
+                                      n_jobs = 4
                                      )
 clf.fit(X_train, y_train)
 pipeline.fit(X_train, y_train)
@@ -229,7 +233,7 @@ print 'The current version has %d difference with the orginal version result:'\
          %(sum(submission.Survived != orginal_result.Survived))
 
          
-submission.to_csv("RandomForest_v2 grid search cv 50 trees min spilit 10 roc_auc.csv", index=False) 
+submission.to_csv("RandomForest_v4.csv", index=False) 
 
 
 import play_a_random_music
@@ -254,7 +258,7 @@ parameters = dict(learning_rate=[0.05, 0.1, 0.15],
 gridiantBoosting_grid_search = sklearn.grid_search.GridSearchCV(gridiantClf, 
                                        param_grid=parameters, 
                                        cv = 10,
-                                      scoring='accuracy',
+                                      scoring='roc_auc',
                                       verbose=3,
                                       n_jobs = 4
                                      )
