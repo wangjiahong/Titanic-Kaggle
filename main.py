@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np
+import play_a_random_music
 import os
 os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
 
@@ -240,12 +241,12 @@ play_a_random_music.stopMusic()
 #*******************************************Gridiant boosting classifier
 gridiantClf = GradientBoostingClassifier()
 
-parameters = dict(learning_rate=[0.05, 0.1, 0.2, 0.3, 0.5, 0.6],
+parameters = dict(learning_rate=[0.05, 0.1, 0.15],
 
-              n_estimators=[26, 50 , 100, 200, 400, 700],
-                max_depth = [3,5,7,9],
-              min_samples_split=[2, 4, 6, 10],
-            min_samples_leaf  = [1,2,3]
+              #n_estimators=[26, 50 , 100, 200, 400, 700],
+                max_depth = [3,4],
+              min_samples_split=[2, 3],
+            min_samples_leaf  = [1,2]
                     ) 
     
 
@@ -253,8 +254,9 @@ parameters = dict(learning_rate=[0.05, 0.1, 0.2, 0.3, 0.5, 0.6],
 gridiantBoosting_grid_search = sklearn.grid_search.GridSearchCV(gridiantClf, 
                                        param_grid=parameters, 
                                        cv = 10,
-                                      scoring='roc_auc',
-                                      verbose=0
+                                      scoring='accuracy',
+                                      verbose=3,
+                                      n_jobs = 4
                                      )
 gridiantBoosting_grid_search.fit(X_train, y_train)
 play_a_random_music.playMusic()
@@ -278,7 +280,7 @@ print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" \
 final_pred = gridiantBoosting_grid_search.predict(df_test)
 submission = pd.DataFrame({"PassengerId": titanic_test["PassengerId"], "Survived": final_pred })
 
-submission.to_csv("Gridiant boosting_V2.csv", index=False) 
+submission.to_csv("Gridiant boosting_V3_accaucy_learn rate 0.15 max depth 3, min leaf1 min split2.csv", index=False) 
 
 #####
 
