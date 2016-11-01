@@ -2,9 +2,9 @@
 
 import pandas as pd
 import numpy as np
-import play_a_random_music
 import os
 os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
+import play_a_random_music
 
 
 # Read data
@@ -170,7 +170,7 @@ df_test = df_combo.loc[n_train_rows: ]
 df_target = titanic_train.Survived
 
 X_train, y_train = df_train, df_target
-â€?
+
 
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
@@ -243,11 +243,11 @@ play_a_random_music.stopMusic()
 
 ####*****************************
 #*******************************************Gridiant boosting classifier
-gridiantClf = GradientBoostingClassifier()
+gridiantClf = GradientBoostingClassifier( n_estimators = 500)
 
 parameters = dict(learning_rate=[0.05, 0.1, 0.15],
 
-              #n_estimators=[26, 50 , 100, 200, 400, 700],
+              
                 max_depth = [3,4],
               min_samples_split=[2, 3],
             min_samples_leaf  = [1,2]
