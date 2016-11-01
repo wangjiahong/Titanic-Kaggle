@@ -170,7 +170,7 @@ df_test = df_combo.loc[n_train_rows: ]
 df_target = titanic_train.Survived
 
 X_train, y_train = df_train, df_target
-â€‹
+â€?
 
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
@@ -183,16 +183,16 @@ import sklearn
 
 kbest = SelectKBest(k = 20)
 randomforest = RandomForestClassifier(
-                             warm_start = True
+                             warm_start = True,
                              
                              #max_depth = 6
-                            # max_features = 'sqrt'
+                            max_features = 'sqrt'
                              )
 pipeline = make_pipeline(kbest, randomforest)               
 
 parameters = dict(
-              n_estimators=[26, 50, 100, 200, 500, 700, 1200],
-                max_features = ['sqrt','log2','8'],
+              n_estimators=[26, 50, 100], #, 200, 500, 700, 1200
+               
             max_depth = [5,6,7,8],
               min_samples_split=[2,3, 4],
                 min_samples_leaf = [1,2,3]
@@ -216,7 +216,7 @@ sklearn.metrics.accuracy_score(df_target, predictions)
   
  
  
-cv_score = cross_validation.cross_val_score(pipeline, df_train, df_target, cv= 10)
+cv_score = cross_validation.cross_val_score(clf, df_train, df_target, cv= 10)
 print("Accuracy : %.4g" % metrics.accuracy_score(df_target.values, predictions))
 print("AUC Score (Train): %f" % metrics.roc_auc_score(df_target, predict_proba))
 print("CV Score : Mean - %.7g | Std - %.7g | Min - %.7g | Max - %.7g" \
