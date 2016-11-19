@@ -184,14 +184,14 @@ import sklearn
 kbest = SelectKBest(k = 20)
 randomforest = RandomForestClassifier(
                              warm_start = True,
-                             
+                             n_estimators = 1000,
                              #max_depth = 6
                             max_features = 'sqrt'
                              )
 pipeline = make_pipeline(kbest, randomforest)               
 
 parameters = dict(
-              n_estimators=[26, 50, 100], #, 200, 500, 700, 1200
+         
                
             max_depth = [5,6,7,8],
               min_samples_split=[2,3, 4],
