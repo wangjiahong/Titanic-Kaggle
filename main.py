@@ -3,9 +3,9 @@
 import pandas as pd
 import numpy as np
 import os
-os.chdir("C:\Users\Jiahong\Documents\Titanic-Kaggle")
+os.chdir("/home/jiahong/Titanic-Kaggle")
 
-
+os.getcwd()
 # Read data
 titanic_train = pd.read_csv("input/train.csv", dtype={"Age": np.float64}, )
 titanic_test = pd.read_csv("input/test.csv", dtype={"Age": np.float64}, )
@@ -160,7 +160,7 @@ pipeline = make_pipeline(kbest, randomforest)
 
  
 parameters = dict(
-              n_estimators=[26, 50,200,500],
+              n_estimators=[500],
               min_samples_split=[2, 3,4,  5, 7,10]
                     ) 
 
@@ -174,10 +174,10 @@ clf.fit(X_train, y_train)
 pipeline.fit(X_train, y_train)
 clf.best_score_
 clf.best_params_
-predictions = clf.predict(X_test)
+predictions = clf.predict(X_train)
 predict_proba = clf.predict_proba(X_train)[:,1]
-sklearn.metrics.classification_report( y_test, predictions )
-sklearn.metrics.accuracy_score(y_test, predictions)
+sklearn.metrics.classification_report( y_train, predictions )
+sklearn.metrics.accuracy_score(y_train, predictions)
   
  
  
